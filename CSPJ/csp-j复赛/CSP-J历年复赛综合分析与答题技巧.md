@@ -685,13 +685,25 @@ int solve_optimized(int n) {
   直接搜索题号（如P7909）
   或者搜索  CSP-J 2024
 
+https://www.luogu.com.cn/problem/list?type=luogu&page=1&tag=343
+
 **具体题目链接：**
 
-- 2024年题目：https://www.luogu.com.cn/problem/P9751
-- 2023年题目：https://www.luogu.com.cn/problem/P8817
-- 2022年题目：https://www.luogu.com.cn/problem/P8813
-- 2021年题目：https://www.luogu.com.cn/problem/P7909
-- 2020年题目：https://www.luogu.com.cn/problem/P7072
+https://www.luogu.com.cn/problem/P9751
+
+**2024年题目：**
+
+* P11227 扑克牌
+* P11228 地图探险
+* P11229 小木棍
+* P11230 接龙
+
+**2023年题目：**
+
+- P9748 小苹果
+- P9749 公路
+- P9750 一元二次方程
+- P9751 旅游巴士
 
 #### 📖 解析资源
 
