@@ -18,6 +18,13 @@ https://www.luogu.com.cn/problem/list?type=luogu&page=1&tag=343
 
 https://www.luogu.com.cn/problem/P9751
 
+**2025年题目：**
+
+* P14357 拼数
+* P14358 座位
+* P14359 异或和
+* P14360 多边形
+
 **2024年题目：**
 
 * P11227 扑克牌
