@@ -4,3 +4,6 @@
 
 target
 .DS_Store
+
+# OJ 原始测试数据（约 373 MB，官方可重新下载，不入版本库）
+_oj-data/
