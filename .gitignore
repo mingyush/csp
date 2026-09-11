@@ -1,9 +1,13 @@
 .idea
 .trae
 .rules
+.claude
 
 target
 .DS_Store
+
+# 可再生生成产物（如 md 导出的预览 PDF），不入版本库
+*-preview.pdf
 
 # OJ 原始测试数据（约 373 MB，官方可重新下载，不入版本库）
 _oj-data/
