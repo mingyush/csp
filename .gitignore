@@ -2,6 +2,7 @@
 .trae
 .rules
 .claude
+.workbuddy/
 
 target
 .DS_Store
