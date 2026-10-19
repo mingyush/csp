@@ -1,0 +1,17 @@
+{
+  "_comment": "图片转写清单：把图片内容填进 content（Markdown 片段），再跑 convert.py inject 回填题面。status 会自动更新。",
+  "problem": "安全接线",
+  "source_html": "T2安全接线.html",
+  "images": [
+    {
+      "id": "img1",
+      "file": "datarange.jpeg",
+      "src": "https://static.xiaohoucode.com/iucud_v1/335725/admin/image/d39677d2626045cfa5fd793a25ebc611.jpeg",
+      "alt": "数据范围表",
+      "section": "数据范围",
+      "context": "对于全部数据，$1 \\le n, q \\le 2 \\times 10^5$，$0 \\le a_i, d \\le 10^9$，$1 \\le u, v \\le n$",
+      "content": "### 测试点分布\n\n| 测试点 | $n \\le$ | $q \\le$ | 特殊性质 |\n| --- | --- | --- | --- |\n| 1 ~ 2 | 10 | 10 | 无 |\n| 3 ~ 7 | 100 | $10^4$ | 无 |\n| 8 ~ 12 | $10^4$ | $10^4$ | 无 |\n| 13 | $2 \\times 10^5$ | $2 \\times 10^5$ | A |\n| 14 ~ 15 | $2 \\times 10^5$ | $2 \\times 10^5$ | B |\n| 16 ~ 20 | $2 \\times 10^5$ | $2 \\times 10^5$ | 无 |",
+      "status": "transcribed"
+    }
+  ]
+}

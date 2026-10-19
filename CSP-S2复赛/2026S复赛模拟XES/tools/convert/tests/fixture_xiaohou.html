@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>配对序列</title>
+</head>
+<body>
+<!--
+  人工构造的测试夹具，按小猴编程 OJ 题面页的真实 DOM 形状复刻（结构来自实际抓取快照的观察，
+  不是复制的真页）。它替代已经丢失的 _raw/*.html，用来给 convert.py 上回归测试。
+  真实页面里出现过的坑，这里都刻意保留了一份：参见 tools/convert/README.md「DOM 坑位」。
+-->
+<div class="wrap">
+<div class="main">
+
+  <div class="top__item">
+    <div class="top__item__name">配对序列</div>
+    <div class="top__item__tag">时间限制：1s</div>
+    <div class="top__item__tag">内存限制：256M</div>
+  </div>
+
+  <!-- 坑 3：题目描述用的是裸 <div>，没有 desc__text；KaTeX 是 mathml + html 双份 -->
+  <div class="practice__desc">
+    <div class="sub-title">题目描述</div>
+    <div class="desc">
+      <div class="desc__text">
+        <div>给定一个长度为 <span class="katex"><span class="katex-mathml"><math><semantics><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">n</span></span> 的正整数序列。</div>
+        <div class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><annotation encoding="application/x-tex">a_i + a_{n-i+1} = T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">a</span></span></div>
+      </div>
+      <!-- 坑 2：<ul> 是 .desc__text 的兄弟节点，不在它里面 -->
+      <ul>
+        <li>性质 A：序列单调不减。</li>
+        <li>性质 B：所有元素相等。
+          <ul><li>子条目也要能渲染。</li></ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="practice__desc">
+    <div class="sub-title">【输入格式】</div>
+    <div class="desc">
+      <div class="desc__text">
+        <div>第 1 行，两个正整数 <span class="katex"><span class="katex-mathml"><math><semantics><annotation encoding="application/x-tex">n, m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">n,m</span></span>。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="practice__desc">
+    <div class="sub-title">【输出格式】</div>
+    <div class="desc">
+      <div class="desc__text"><div>输出一行一个整数，表示最少操作次数。</div></div>
+    </div>
+  </div>
+
+  <div class="sample__list">
+    <div class="sample__list__item">
+      <div class="sub-title">【输入输出样例#1】</div>
+      <div class="main__example__item">
+        <div>输入#1</div>
+        <pre>4 4
+1 2 4 3
+</pre>
+      </div>
+      <div class="main__example__item">
+        <div>输出#1</div>
+        <pre>1
+</pre>
+      </div>
+    </div>
+    <div class="sample__list__item">
+      <div class="sub-title">【输入输出样例#2】</div>
+      <div class="main__example__item">
+        <div>输入#2</div>
+        <pre>该组数据满足特殊性质。
+注意：OI 赛制下评测只显示该测试点是否通过。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="practice__desc">
+    <div class="sub-title">【数据范围】</div>
+    <div class="desc">
+      <div class="desc__text">
+        <div>对于全部数据，<span class="katex"><span class="katex-mathml"><math><semantics><annotation encoding="application/x-tex">2 \le n, m \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">2 &lt;= n, m &lt;= 10^5</span></span>。</div>
+      </div>
+      <!-- 坑 5：时限块在页面里重复出现两次，需要去重 -->
+      <div class="desc__text">
+        <div>时间限制：1s&#12288;内存限制：256M</div>
+      </div>
+      <div class="desc__text">
+        <div>时间限制：1s&#12288;内存限制：256M</div>
+      </div>
+      <!-- 坑 4：数据范围表是图片，需要转写为文本 -->
+      <div>
+        <img src="https://static.xiaohoucode.com/iucud_v1/335725/admin/image/c65e9a951dac432eabee30ac1c82c526.jpeg" alt="数据范围表">
+      </div>
+    </div>
+  </div>
+
+  <!-- 坑 6：隐藏的 desc-html 副本，正文会重复，必须整块丢弃 -->
+  <div class="desc-html">
+    <div class="desc__text"><div>这是隐藏副本，必须被丢弃。</div></div>
+  </div>
+
+</div>
+</div>
+</body>
+</html>

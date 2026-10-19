@@ -1,0 +1,17 @@
+{
+  "_comment": "图片转写清单：把图片内容填进 content（Markdown 片段），再跑 convert.py inject 回填题面。status 会自动更新。",
+  "problem": "字符串生成器",
+  "source_html": "T3字符串生成器.html",
+  "images": [
+    {
+      "id": "img1",
+      "file": "datarange.jpeg",
+      "src": "https://static.xiaohoucode.com/iucud_v1/335725/admin/image/11fece1bae8f425f8f79419b534899ae.jpeg",
+      "alt": "数据范围表",
+      "section": "数据范围",
+      "context": "对于全部数据，$1 \\le n, m \\le 10^6$，$s$ 仅含字符 $\\texttt{0}$、$\\texttt{1}$，$t$ 仅含小写字母。",
+      "content": "### 测试点分布\n\n| 测试点 | $n, m \\le$ | 特殊性质 |\n| --- | --- | --- |\n| 1 ~ 4 | 10 | 无 |\n| 5 ~ 8 | 5000 | 无 |\n| 9 ~ 12 | $10^6$ | A |\n| 13 ~ 16 | $10^6$ | B |\n| 17 ~ 25 | $10^6$ | 无 |",
+      "status": "transcribed"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "图片转写清单：把图片内容填进 content（Markdown 片段），再跑 convert.py inject 回填题面。status 会自动更新。",
+  "problem": "配对序列",
+  "source_html": "T1配对系列.html",
+  "images": [
+    {
+      "id": "img1",
+      "file": "datarange.jpeg",
+      "src": "https://static.xiaohoucode.com/iucud_v1/335725/admin/image/c65e9a951dac432eabee30ac1c82c526.jpeg",
+      "alt": "数据范围表",
+      "section": "数据范围",
+      "context": "对于全部数据，$2 \\le n, m \\le 10^5$，$1 \\le a_i \\le m$，$n$ 为偶数。",
+      "content": "### 测试点分布\n\n| 测试点 | $n, m \\le$ | 特殊性质 |\n| --- | --- | --- |\n| 1 ~ 4 | 10 | 无 |\n| 5 ~ 8 | 100 | 无 |\n| 9 ~ 12 | 5000 | 无 |\n| 13 ~ 14 | $10^5$ | 所有 $a_i$ 都相等 |\n| 15 ~ 20 | $10^5$ | 无 |",
+      "status": "transcribed"
+    }
+  ]
+}

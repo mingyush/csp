@@ -1,0 +1,9 @@
+# 测试数据必须逐字节保留：禁止换行符归一化
+*.in -text
+*.ans -text
+*.out -text
+
+# 文本类统一 LF，避免跨平台 diff 噪声
+*.md text eol=lf
+*.cpp text eol=lf
+*.py text eol=lf

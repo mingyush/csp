@@ -1,0 +1,17 @@
+{
+  "_comment": "图片转写清单：把图片内容填进 content（Markdown 片段），再跑 convert.py inject 回填题面。status 会自动更新。",
+  "problem": "极差之和",
+  "source_html": "T4极差之和.html",
+  "images": [
+    {
+      "id": "img1",
+      "file": "datarange.jpeg",
+      "src": "https://static.xiaohoucode.com/iucud_v1/335725/admin/image/df1de49e352c4c13afc494cfe9454768.jpeg",
+      "alt": "数据范围表",
+      "section": "数据范围",
+      "context": "对于全部数据，$1 \\le n \\le 2 \\times 10^5$，$1 \\le k \\le \\dfrac{n(n+1)}{2}$，$0 \\le a_i \\l",
+      "content": "### 测试点分布\n\n| 测试点 | $n \\le$ | $k \\le$ | 特殊性质 |\n| --- | --- | --- | --- |\n| 1 | 10 | 5 | 无 |\n| 2 ~ 3 | 100 | 100 | 无 |\n| 4 ~ 9 | $10^5$ | $10^5$ | 无 |\n| 10 ~ 13 | $2 \\times 10^5$ | $10^9$ | A |\n| 14 ~ 16 | $2 \\times 10^5$ | $10^9$ | B |\n| 17 ~ 20 | $2 \\times 10^5$ | $10^9$ | 无 |\n| 21 ~ 25 | $2 \\times 10^5$ | $10^{12}$ | 无 |",
+      "status": "transcribed"
+    }
+  ]
+}
