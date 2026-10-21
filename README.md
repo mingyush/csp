@@ -4,7 +4,7 @@ CSP-J（入门级）与 CSP-S（提高级）第一轮、第二轮的历年真题
 
 ![资料规模](https://img.shields.io/badge/资料-230%20文件%20%2F%20177MB-blue.svg)
 
-![更新](https://img.shields.io/badge/最近更新-2026--10--19-green.svg)
+![更新](https://img.shields.io/badge/最近更新-2026--10--21-green.svg)
 
 ![License](https://img.shields.io/badge/原创内容-MIT-lightgrey.svg)
 
@@ -69,6 +69,7 @@ csp/
 **CSP-S 复赛**
 
 - [CSP-S复赛真题题解（2021-2025）](CSP-S2复赛/题解/CSP-S复赛真题题解（2021-2025）.md) — 20 题逐题：题意、分档做法、复杂度、易错点、参考代码
+- [CSP-S复赛算法思维训练法](CSP-S2复赛/备考/CSP-S复赛算法思维训练法.md) — 从暴力到正解的六步闭环、四类题训练重点与可视化使用原则
 - [知识点体系与考场技巧](CSP-S2复赛/备考/CSP-S复赛知识点体系与考场技巧.md) — 六大模块与防爆零清单
 - [历年真题综合分析与答题技巧](CSP-S2复赛/备考/CSP-S复赛历年真题综合分析与答题技巧.md) — 2019—2025 考点统计与时间分配
 - [历年真题考点一览](CSP-S2复赛/备考/CSP-S复赛历年真题考点一览.md) — 逐年考点速查

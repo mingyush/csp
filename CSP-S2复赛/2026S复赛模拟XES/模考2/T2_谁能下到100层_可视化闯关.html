@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>谁能下到 100 层 · CSP-S T2 可视化闯关</title>
+<style>
+:root{
+  --bg:#040a14;
+  --ink:#e9f5ff;
+  --muted:#87a0ba;
+  --line:rgba(140,190,255,.14);
+  --cyan:#5eead4;
+  --mint:#34d399;
+  --blue:#60a5fa;
+  --violet:#a78bfa;
+  --amber:#fbbf24;
+  --red:#fb7185;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;overflow:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(900px 620px at 16% 8%, rgba(45,212,191,.13), transparent 62%),
+    radial-gradient(860px 680px at 88% 84%, rgba(124,58,237,.15), transparent 64%),
+    radial-gradient(700px 420px at 55% -6%, rgba(56,189,248,.11), transparent 70%),
+    linear-gradient(180deg,#040a14 0%,#061120 55%,#03070f 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(125,211,252,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(125,211,252,.045) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(circle at 50% 32%,rgba(0,0,0,.75),transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 32%,rgba(0,0,0,.75),transparent 78%);
+}
+::selection{background:rgba(94,234,212,.25);color:#fff}
+button{font-family:inherit}
+.app{display:flex;flex-direction:column;height:100dvh;min-height:0}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:16px;padding:14px 22px 10px;flex:none;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;flex:none;min-width:255px}
+.logo{width:40px;height:40px;flex:none;filter:drop-shadow(0 0 12px rgba(94,234,212,.35))}
+.brand h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.01em}
+.brand p{margin:3px 0 0;font-size:10.5px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase}
+nav.chapters{display:flex;align-items:center;gap:5px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;padding:2px}
+nav.chapters::-webkit-scrollbar{display:none}
+.chip{
+  display:flex;align-items:center;gap:7px;flex:none;cursor:pointer;
+  border:1px solid transparent;background:transparent;color:#8fa7c0;
+  padding:7px 10px;border-radius:9px;font-size:12px;white-space:nowrap;
+  transition:.2s;letter-spacing:.02em;
+}
+.chip:hover{color:#dbeafe;background:rgba(125,180,255,.07)}
+.chip .n{font-family:var(--mono);font-size:10px;opacity:.65}
+.chip .tick{width:5px;height:5px;border-radius:50%;background:#334155;transition:.2s}
+.chip.done .tick{background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.chip.active{color:#04121a;background:linear-gradient(135deg,#5eead4,#38bdf8);border-color:transparent;font-weight:700;box-shadow:0 6px 22px -8px rgba(56,189,248,.7)}
+.chip.active .n{opacity:.75}
+.chip.active .tick{background:#04121a;box-shadow:none}
+.top-actions{display:flex;gap:6px;flex:none}
+.depth{flex:none;width:186px;text-align:right}
+.depth-line{display:flex;align-items:baseline;justify-content:flex-end;gap:5px;font-size:10.5px;color:var(--muted);letter-spacing:.1em}
+.depth-line b{font-family:var(--mono);font-size:19px;color:var(--cyan);letter-spacing:0;line-height:1.1;text-shadow:0 0 18px rgba(94,234,212,.5)}
+.meter{height:5px;border-radius:99px;background:rgba(148,163,184,.16);overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#5eead4,#38bdf8);box-shadow:0 0 14px rgba(94,234,212,.65);transition:width .9s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- layout ---------- */
+main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 398px;gap:16px;padding:0 20px 16px;min-height:0}
+.stage{
+  position:relative;min-height:0;border-radius:22px;overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 50% -10%,rgba(20,55,90,.5),transparent 62%),
+    linear-gradient(180deg,rgba(8,20,36,.92),rgba(3,9,18,.97));
+  box-shadow:0 34px 90px -34px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.stage::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 45% at 50% 0%,rgba(94,234,212,.07),transparent 70%);
+}
+#tower{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation}
+.stage-head{position:absolute;top:13px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;z-index:3;pointer-events:none}
+.scene-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:#7f9bb8;padding:5px 9px;border-radius:8px;background:rgba(5,13,24,.5);border:1px solid rgba(140,190,255,.1)}
+.rec{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulseDot 1.8s infinite}
+@keyframes pulseDot{50%{opacity:.3}}
+.legend{display:flex;gap:12px;align-items:center;padding:5px 4px;font-size:10px;color:#7f9bb8;letter-spacing:.06em}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend span::before{content:"";width:6px;height:6px;border-radius:2px;background:#38bdf8}
+.legend span[data-k="reach"]::before{background:var(--mint);box-shadow:0 0 7px var(--mint)}
+.legend span[data-k="vis"]::before{background:var(--violet)}
+.legend span[data-k="parent"]::before{background:var(--violet);transform:rotate(45deg)}
+.legend span[data-k="block"]::before{background:var(--red)}
+
+.status-bar{
+  position:absolute;left:14px;right:14px;bottom:13px;z-index:4;
+  display:flex;align-items:center;gap:10px;min-height:42px;
+  padding:9px 14px;border-radius:13px;
+  background:rgba(4,10,20,.78);border:1px solid rgba(140,190,255,.13);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 16px 40px -20px rgba(0,0,0,.9);
+}
+.status-bar .dot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);transition:.2s}
+.status-bar p{margin:0;font-size:12.5px;line-height:1.55;color:#c6d9ec}
+.status-bar b{color:#fff;font-weight:650}
+.status-bar em{font-style:normal;color:var(--cyan);font-family:var(--mono);font-size:12px}
+.status-bar[data-tone="warn"] .dot{background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.status-bar[data-tone="warn"] em{color:var(--amber)}
+.status-bar[data-tone="bad"] .dot{background:var(--red);box-shadow:0 0 10px var(--red)}
+.status-bar[data-tone="bad"] em{color:var(--red)}
+.status-bar[data-tone="good"] .dot{background:var(--mint);box-shadow:0 0 10px var(--mint)}
+.status-bar[data-tone="good"] em{color:var(--mint)}
+.status-bar[data-tone="violet"] .dot{background:var(--violet);box-shadow:0 0 10px var(--violet)}
+.status-bar[data-tone="violet"] em{color:var(--violet)}
+
+.toast{
+  position:absolute;left:50%;top:58px;transform:translate(-50%,-8px);z-index:8;
+  padding:9px 15px;border-radius:11px;font-size:12.5px;
+  background:rgba(8,18,32,.94);border:1px solid rgba(251,113,133,.4);
+  color:#ffdbe1;box-shadow:0 18px 50px -16px rgba(0,0,0,.9);
+  opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;max-width:82%;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.good{border-color:rgba(52,211,153,.45);color:#d6fff0}
+.toast.info{border-color:rgba(125,211,252,.4);color:#e0f2fe}
+
+/* ---------- stack overlay ---------- */
+.stack-panel{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:4;display:none;max-width:92%}
+.stack-panel.on{display:block}
+.stack-box{background:rgba(5,13,25,.86);border:1px solid rgba(167,139,250,.28);border-radius:12px;padding:8px 11px;backdrop-filter:blur(10px);box-shadow:0 18px 44px -18px #000}
+.stack-label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:#9d8bd0;margin-bottom:6px;text-align:center}
+.stack-row{display:flex;align-items:center;gap:5px;min-height:27px;justify-content:center;flex-wrap:wrap}
+.schip{display:flex;align-items:baseline;gap:3px;font-family:var(--mono);font-size:10.5px;padding:4px 7px;border-radius:6px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);color:#ddd0ff;animation:chipIn .24s ease-out}
+.schip b{color:#fff;font-size:11px}
+.schip small{font-size:8.5px;opacity:.6}
+.schip.top{background:rgba(94,234,212,.22);border-color:rgba(94,234,212,.6);color:#eafffc;box-shadow:0 0 14px -4px rgba(94,234,212,.6)}
+.schip.pop{background:rgba(251,113,133,.12);border-color:rgba(251,113,133,.4);color:#ffc9d2;text-decoration:line-through;opacity:.75}
+.sempty{font-size:10.5px;color:#5f748c;font-family:var(--mono);letter-spacing:.1em}
+.sdiv{width:1px;height:18px;background:rgba(251,113,133,.32);margin:0 3px;flex:none}
+@keyframes chipIn{from{opacity:0;transform:translateY(-5px) scale(.9)}to{opacity:1;transform:none}}
+
+.hint-pill{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;display:none;padding:6px 10px;border-radius:8px;font-size:11px;background:rgba(4,10,20,.8);border:1px dashed rgba(94,234,212,.35);color:#a9f5e9}
+
+/* ---------- right panel ---------- */
+.panel{
+  min-height:0;display:flex;flex-direction:column;border-radius:22px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(11,24,42,.92),rgba(5,12,23,.97));
+  box-shadow:0 34px 90px -40px #000,inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;overflow:hidden;
+}
+.panel::before{content:"";position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(94,234,212,.45),transparent)}
+.panel-scroll{padding:21px 22px 26px;overflow-y:auto;overflow-x:hidden;flex:1;scrollbar-width:thin;scrollbar-color:rgba(125,180,255,.25) transparent}
+.panel-scroll::-webkit-scrollbar{width:8px}
+.panel-scroll::-webkit-scrollbar-thumb{background:rgba(125,180,255,.18);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+.eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.17em;color:var(--cyan);text-transform:uppercase}
+.eyebrow::before{content:"";width:14px;height:1px;background:var(--cyan);opacity:.7}
+h2#pTitle{margin:9px 0 12px;font-size:25px;line-height:1.25;font-weight:700;letter-spacing:-.015em;color:#f4fbff}
+.body{font-size:13.3px;line-height:1.78;color:#b6cbe0}
+.body p{margin:0 0 9px}
+.body p:last-child{margin-bottom:0}
+.body b,.body strong{color:#eef8ff;font-weight:650}
+.body em{font-style:normal;color:var(--cyan)}
+.body code,.callout code,.focus-card code{font-family:var(--mono);font-size:11.5px;padding:1px 5px;border-radius:5px;background:rgba(94,234,212,.09);color:#affaf0;border:1px solid rgba(94,234,212,.12)}
+.body ul{margin:8px 0 10px;padding-left:0;list-style:none;display:grid;gap:7px}
+.body li{position:relative;padding-left:20px}
+.body li::before{content:"";position:absolute;left:4px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--cyan);opacity:.7}
+.rules{display:grid;gap:8px;margin:10px 0}
+.rule{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;background:rgba(125,180,255,.045);border:1px solid rgba(125,180,255,.11);font-size:12.5px;color:#c6d9ec}
+.rule .k{font-family:var(--mono);font-size:10px;color:#04121a;background:var(--cyan);border-radius:5px;padding:2px 6px;font-weight:700;flex:none}
+.rule b{color:#fff}
+
+.callout{margin:14px 0 4px;padding:11px 13px;border-radius:12px;border:1px solid;font-size:12.3px;line-height:1.72;position:relative}
+.callout .ct{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.15em;margin-bottom:4px;opacity:.8}
+.callout.insight{background:rgba(94,234,212,.06);border-color:rgba(94,234,212,.24);color:#bdf6ec}
+.callout.warn{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.24);color:#ffe9b5}
+.callout.danger{background:rgba(251,113,133,.07);border-color:rgba(251,113,133,.26);color:#ffd3da}
+.callout.good{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.26);color:#c6ffe8}
+.callout.violet{background:rgba(167,139,250,.07);border-color:rgba(167,139,250,.26);color:#ded4ff}
+
+.code-card{margin:14px 0 6px;border-radius:12px;background:#030811;border:1px solid rgba(125,180,255,.15);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid rgba(125,180,255,.1);font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:#6f8aa6;background:rgba(125,180,255,.025)}
+.code-head button{border:0;background:transparent;color:#7f9bb8;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;cursor:pointer;padding:2px 5px;border-radius:4px}
+.code-head button:hover{color:var(--cyan);background:rgba(94,234,212,.08)}
+pre.code{margin:0;padding:10px 0;overflow-x:auto;font-family:var(--mono);font-size:11.4px;line-height:1.72;scrollbar-width:thin}
+.cl{display:flex;padding:0 11px;white-space:pre;color:#8fadca}
+.cl .ln{width:19px;flex:none;color:#35506c;text-align:right;margin-right:11px;user-select:none}
+.cl.hl{background:rgba(94,234,212,.08);box-shadow:inset 2px 0 0 var(--cyan);color:#e8fffb}
+.cl.hl .ln{color:#5eead4}
+.cl.hl2{background:rgba(251,191,36,.07);box-shadow:inset 2px 0 0 var(--amber);color:#fff4d6}
+.cm{color:#4c6b88;font-style:italic}
+.kw{color:#c4b5fd}
+.fn{color:#7dd3fc}
+.num{color:#fcd34d}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:13px}
+.stat{padding:9px 10px;border-radius:10px;background:rgba(125,180,255,.04);border:1px solid rgba(125,180,255,.1)}
+.stat .k{font-size:9px;letter-spacing:.12em;color:#7690aa;text-transform:uppercase;font-family:var(--mono)}
+.stat .v{font-family:var(--mono);font-size:15px;color:#eaf6ff;margin-top:2px;white-space:nowrap}
+.stat .v small{font-size:9.5px;color:#87a0ba;margin-left:3px}
+.stat.wide{grid-column:1/-1}
+.stat.hot .v{color:var(--amber)}
+.stat.ok .v{color:var(--mint)}
+
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+@media (min-width:981px){
+  .actions{position:sticky;bottom:-27px;z-index:3;padding:12px 0 3px;margin-bottom:-4px;background:linear-gradient(180deg,rgba(5,12,23,0),rgba(5,12,23,.96) 34%)}
+}
+.btn{
+  appearance:none;border:1px solid rgba(148,197,255,.22);background:rgba(148,197,255,.055);
+  color:#d5e7f8;padding:9px 13px;border-radius:10px;font-size:12px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;transition:.18s;line-height:1;letter-spacing:.02em;
+}
+.btn:hover:not(:disabled){background:rgba(148,197,255,.12);border-color:rgba(148,197,255,.38);transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn.primary{background:linear-gradient(135deg,#5eead4,#38bdf8);border-color:transparent;color:#04121a;font-weight:700;box-shadow:0 10px 26px -12px rgba(56,189,248,.85)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.07);background:linear-gradient(135deg,#5eead4,#38bdf8)}
+.btn.violet{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.35);color:#e2d9ff}
+.btn.ghost{background:transparent}
+.btn.small{padding:6px 9px;font-size:10.5px;border-radius:8px}
+.btn:disabled{opacity:.32;cursor:not-allowed}
+.btn kbd{font-family:var(--mono);font-size:9px;padding:1px 4px;border-radius:4px;background:rgba(0,0,0,.18);border:1px solid rgba(0,0,0,.12)}
+
+/* ---------- focus card ---------- */
+.focus-card{margin-top:10px;padding:11px 12px;border-radius:11px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.22)}
+.focus-card .fc-h{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#b6a5ee;margin-bottom:6px}
+.focus-card .fc-t{font-size:13px;color:#fff;font-weight:650;margin-bottom:5px}
+.focus-card .fc-row{font-family:var(--mono);font-size:11px;color:#cbbff5;line-height:1.75}
+.focus-card .fc-row .up{color:var(--mint)}
+
+/* ---------- SVG ---------- */
+#tower text{font-family:var(--mono)}
+.bar{cursor:pointer}
+.bar .body{transition:filter .18s,opacity .2s}
+.bar:hover .body{filter:brightness(1.45)}
+.bar:hover .hlabel{fill:#fff}
+.hlabel{font-size:10px;fill:#7e9ab5;text-anchor:middle;letter-spacing:.02em;transition:fill .18s}
+.hlabel.in{fill:#fff;opacity:.92;font-weight:700}
+.idxlabel{font-size:9.5px;fill:#4c6b88;text-anchor:middle;letter-spacing:.02em}
+.bar.cur .hlabel{fill:#fcd34d}
+.bar.cur .idxlabel{fill:#fcd34d}
+.bar.vis .idxlabel{fill:#a78bfa}
+.bar.focus .idxlabel{fill:#f9a8d4}
+.bar.block .idxlabel{fill:#fb7185}
+.bar.dim{opacity:.35}
+.edge{fill:none;stroke-width:1.9;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;animation:drawEdge .5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes drawEdge{to{stroke-dashoffset:0}}
+.edge.jump{stroke:#34d399;stroke-dasharray:100;filter:drop-shadow(0 0 4px rgba(52,211,153,.5))}
+.edge.jump-soft{stroke:rgba(52,211,153,.45);stroke-width:1.4}
+.edge.parentL{stroke:#a78bfa;filter:drop-shadow(0 0 4px rgba(167,139,250,.45))}
+.edge.parentR{stroke:#60a5fa;filter:drop-shadow(0 0 4px rgba(96,165,250,.45))}
+.edge.parentL-soft{stroke:rgba(167,139,250,.35);stroke-width:1.3}
+.edge.parentR-soft{stroke:rgba(96,165,250,.35);stroke-width:1.3}
+.edge.block{stroke:#fb7185;stroke-dasharray:5 5;stroke-width:1.7;filter:drop-shadow(0 0 5px rgba(251,113,133,.4))}
+.edge.still{animation:none;stroke-dashoffset:0}
+.edge.trace{stroke:#fbbf24;stroke-width:2.4;filter:drop-shadow(0 0 6px rgba(251,191,36,.55))}
+.reach-dot{fill:#34d399;filter:drop-shadow(0 0 7px rgba(52,211,153,.9));animation:dotPulse 1.7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes dotPulse{0%,100%{transform:scale(.8);opacity:.6}50%{transform:scale(1.18);opacity:1}}
+.badge rect{stroke-width:1}
+.badge text{font-family:var(--mono);font-size:9.5px;text-anchor:middle;dominant-baseline:central;font-weight:700}
+.badge.amber rect{fill:#fbbf24;stroke:#fde68a}
+.badge.amber text{fill:#3b2500}
+.badge.red rect{fill:#fb7185;stroke:#fecdd3}
+.badge.red text{fill:#3d0710}
+.badge.violet rect{fill:#a78bfa;stroke:#ddd6fe}
+.badge.violet text{fill:#1e0a4d}
+.badge.green rect{fill:#34d399;stroke:#a7f3d0}
+.badge.green text{fill:#022c22}
+.badge.blue rect{fill:#60a5fa;stroke:#bfdbfe}
+.badge.blue text{fill:#07203f}
+.badge{animation:badgeIn .28s cubic-bezier(.2,1.4,.4,1)}
+@keyframes badgeIn{from{opacity:0;transform:translateY(4px) scale(.85)}to{opacity:1;transform:none}}
+.block-ring{fill:none;stroke:#fb7185;stroke-width:1.6;stroke-dasharray:3 4;opacity:.9;animation:spin 7s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.focus-ring{fill:none;stroke:#f472b6;stroke-width:1.5;stroke-dasharray:4 4;opacity:.8}
+.target-ring{fill:none;stroke:#fbbf24;stroke-width:1.8;stroke-dasharray:4 4;opacity:.95;animation:spin 5s linear infinite reverse;transform-box:fill-box;transform-origin:center}
+.ripple{fill:none;stroke:#5eead4;stroke-width:2;animation:ripple .7s ease-out forwards}
+@keyframes ripple{from{r:4;opacity:.9}to{r:36;opacity:0}}
+.spark{fill:#fbbf24;animation:sparkOut .65s ease-out forwards}
+@keyframes sparkOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-26px)}}
+
+#hero{pointer-events:none}
+.hero-bob{animation:bob 2.9s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.hero.jumping .hero-bob{animation:none}
+.hero-shadow{fill:rgba(0,0,0,.5);filter:blur(2px)}
+.hero-body{fill:url(#gHero);stroke:rgba(255,255,255,.55);stroke-width:.8;filter:drop-shadow(0 0 10px rgba(94,234,212,.7))}
+.hero-eye{fill:#04121a}
+.hero-mouth{fill:none;stroke:#04121a;stroke-width:1.2;stroke-linecap:round}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.22s}
+.modal.on{opacity:1;pointer-events:auto}
+.modal-bg{position:absolute;inset:0;background:rgba(2,6,12,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal-card{position:relative;width:min(720px,100%);max-height:86vh;overflow:auto;border-radius:20px;border:1px solid rgba(140,190,255,.2);background:linear-gradient(180deg,#0a182b,#050d19);box-shadow:0 50px 120px -30px #000;padding:26px 28px;transform:translateY(10px) scale(.99);transition:.25s}
+.modal.on .modal-card{transform:none}
+.modal-card h3{margin:0 0 4px;font-size:22px}
+.modal-card .sub{color:var(--muted);font-size:11.5px;letter-spacing:.1em;font-family:var(--mono);margin-bottom:16px}
+.modal-card h4{margin:16px 0 6px;font-size:12px;letter-spacing:.12em;color:var(--cyan);font-family:var(--mono)}
+.modal-card p{font-size:13px;line-height:1.8;color:#b9cde0;margin:0 0 8px}
+.modal-card .io{font-family:var(--mono);font-size:12px;background:#030811;border:1px solid rgba(125,180,255,.15);border-radius:10px;padding:11px 13px;color:#c9e6ff;white-space:pre;overflow:auto}
+.modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:9px;border:1px solid rgba(148,197,255,.18);background:rgba(148,197,255,.06);color:#cfe4f7;font-size:16px;cursor:pointer;line-height:1}
+.modal-close:hover{background:rgba(148,197,255,.14)}
+.modal-card a{color:var(--cyan)}
+
+/* finish */
+.finish-card{text-align:center;overflow:hidden}
+.finish-num{font-family:var(--mono);font-size:64px;line-height:1;color:transparent;background:linear-gradient(135deg,#5eead4,#60a5fa 60%,#a78bfa);-webkit-background-clip:text;background-clip:text;margin:8px 0 2px;filter:drop-shadow(0 0 26px rgba(94,234,212,.35))}
+.finish-sub{color:var(--muted);font-size:12px;letter-spacing:.16em;font-family:var(--mono)}
+.finish-list{text-align:left;margin:20px 0;display:grid;gap:8px}
+.finish-list div{padding:10px 12px;border-radius:10px;background:rgba(125,180,255,.05);border:1px solid rgba(125,180,255,.12);font-size:12.5px;color:#c4d7e9}
+.finish-list b{color:#fff}
+.finish-note{text-align:left;margin:0 0 14px;padding:11px 13px;border-radius:10px;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.07);font-size:12px;line-height:1.7;color:#fde68a}
+.finish-note b{color:#fff}
+.confetti{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.modal-bg{z-index:0}
+.modal-card{z-index:2}
+.confetti i{position:absolute;top:-12px;width:7px;height:11px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--dx),105vh,0) rotate(720deg);opacity:.9}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1120px){
+  nav.chapters .chip{padding:7px 8px}
+  .depth{width:150px}
+}
+@media (max-width:980px){
+  body{overflow:auto}
+  .app{height:auto;min-height:100dvh}
+  .topbar{flex-wrap:wrap;padding:12px 14px 8px;gap:10px}
+  .brand{min-width:0;flex:1}
+  .brand h1{font-size:15px}
+  .brand p{font-size:9px;letter-spacing:.08em}
+  .logo{width:34px;height:34px}
+  .depth{width:132px;order:2}
+  .depth-line b{font-size:16px}
+  .top-actions{order:2}
+  nav.chapters{order:3;width:100%;flex:none}
+  nav.chapters .chip .t{display:inline}
+  main{grid-template-columns:1fr;padding:0 12px 14px;gap:12px;min-height:0}
+  .stage{height:56vh;min-height:390px;border-radius:18px}
+  .panel{border-radius:18px;max-height:none}
+  .panel-scroll{overflow:visible;padding:18px 18px 22px}
+  .legend{display:none}
+  nav.chapters{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);padding:0 8px}
+  .stack-panel{top:6px;max-width:96%}
+  .stack-box{padding:5px 9px;display:flex;align-items:center;gap:8px}
+  .stack-label{margin:0;white-space:nowrap;font-size:8px;letter-spacing:.08em}
+  .stack-row{min-height:22px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start}
+  .schip{padding:2px 5px;font-size:9px}
+  .schip small{font-size:7.5px}
+  .stage.has-stack .scene-tag{display:none}
+  .status-bar{font-size:11.5px;left:10px;right:10px;bottom:10px}
+  .status-bar p{font-size:11.5px}
+  h2#pTitle{font-size:22px}
+}
+@media (max-width:520px){
+  .brand p{display:none}
+  .depth{width:104px}
+  .depth-line{font-size:9px}
+  .stack-panel{top:48px}
+  .stage-head{left:10px;right:10px}
+  .scene-tag{font-size:9px;letter-spacing:.06em}
+  .btn{padding:8px 11px;font-size:11.5px}
+  pre.code{font-size:10px}
+  .cl{white-space:pre-wrap;word-break:break-word}
+  .cl > span:last-child{white-space:pre-wrap}
+  .schip{background:rgba(167,139,250,.2)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect x="3" y="21" width="8" height="16" rx="2" fill="#0e7490" stroke="#5eead4" stroke-opacity=".5"/>
+        <rect x="14" y="11" width="8" height="26" rx="2" fill="#0e7490" stroke="#5eead4" stroke-opacity=".65"/>
+        <rect x="25" y="25" width="8" height="12" rx="2" fill="#0e7490" stroke="#5eead4" stroke-opacity=".4"/>
+        <circle cx="18" cy="8" r="3.4" fill="#5eead4"/>
+        <path d="M18 5V2.2" stroke="#5eead4" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h1>谁能下到 100 层</h1>
+        <p>CSP-S 2026 模考 2 · T2 · 可视化闯关</p>
+      </div>
+    </div>
+    <nav class="chapters" id="chapterNav" aria-label="章节导航"></nav>
+    <div class="top-actions">
+      <button class="btn ghost small" id="problemBtn">题目</button>
+    </div>
+    <div class="depth">
+      <div class="depth-line"><span>下潜</span><b id="depthNum">0</b><span>/ 100 层</span></div>
+      <div class="meter"><i id="depthFill"></i></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="stage" id="stage">
+      <div class="stage-head">
+        <div class="scene-tag"><span class="rec"></span><span id="sceneTag">SCENE 01</span></div>
+        <div class="legend">
+          <span data-k="reach">可跳</span>
+          <span data-k="vis">走过</span>
+          <span data-k="parent">逆向边</span>
+          <span data-k="block">挡住</span>
+        </div>
+      </div>
+      <svg id="tower" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-label="平台塔">
+        <defs>
+          <linearGradient id="gBar" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2dd4bf" stop-opacity=".34"/>
+            <stop offset=".5" stop-color="#0ea5e9" stop-opacity=".12"/>
+            <stop offset="1" stop-color="#0ea5e9" stop-opacity=".03"/>
+          </linearGradient>
+          <linearGradient id="gBarCur" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fbbf24" stop-opacity=".42"/>
+            <stop offset="1" stop-color="#f59e0b" stop-opacity=".04"/>
+          </linearGradient>
+          <linearGradient id="gBarVis" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a78bfa" stop-opacity=".38"/>
+            <stop offset="1" stop-color="#7c3aed" stop-opacity=".04"/>
+          </linearGradient>
+          <linearGradient id="gHero" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#a7fff3"/>
+            <stop offset=".55" stop-color="#5eead4"/>
+            <stop offset="1" stop-color="#38bdf8"/>
+          </linearGradient>
+          <filter id="fGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="mJump" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+          </marker>
+          <marker id="mParent" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/>
+          </marker>
+          <marker id="mParentR" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#60a5fa"/>
+          </marker>
+          <marker id="mBlock" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#fb7185"/>
+          </marker>
+          <marker id="mTrace" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/>
+          </marker>
+        </defs>
+        <g id="gridLayer"></g>
+        <g id="barLayer"></g>
+        <g id="edgeLayer"></g>
+        <g id="badgeLayer"></g>
+        <g id="heroLayer">
+          <g id="hero" style="display:none">
+            <ellipse class="hero-shadow" cx="0" cy="1" rx="13" ry="3.6"/>
+            <g class="hero-bob">
+              <ellipse cx="0" cy="-15" rx="18" ry="19" fill="#5eead4" opacity=".1"/>
+              <rect class="hero-body" x="-9.5" y="-30" width="19" height="29" rx="9.5"/>
+              <circle class="hero-eye" cx="-3.6" cy="-19.5" r="1.7"/>
+              <circle class="hero-eye" cx="3.6" cy="-19.5" r="1.7"/>
+              <path class="hero-mouth" d="M-2.8,-14.5 Q0,-12.2 2.8,-14.5"/>
+              <path d="M-5,-30 Q0,-34 5,-30" stroke="#ffffff" stroke-opacity=".5" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            </g>
+          </g>
+        </g>
+        <g id="fxLayer"></g>
+      </svg>
+      <div class="stack-panel" id="stackPanel"></div>
+      <div class="toast" id="toast"></div>
+      <div class="status-bar" id="statusBar" data-tone="info"><i class="dot"></i><p id="statusText">点击任意平台开始。</p></div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-scroll" id="panelScroll">
+        <div class="eyebrow" id="pEyebrow"></div>
+        <h2 id="pTitle"></h2>
+        <div class="body" id="pBody"></div>
+        <div id="pCallout"></div>
+        <div id="pCode"></div>
+        <div class="stats" id="pStats"></div>
+        <div class="actions" id="pActions"></div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div class="modal" id="problemModal" aria-hidden="true">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="题目">
+    <button class="modal-close" data-close aria-label="关闭">×</button>
+    <h3>谁能下到 100 层</h3>
+    <div class="sub">CSP-S 2026 复赛模考 2 · T2 · 参考难度：提高</div>
+    <h4>题目描述</h4>
+    <p>有 <b>n</b> 个从左到右排列的平台，第 i 个平台的高度为 h<sub>i</sub>。可以从平台 i 跳到平台 j，当且仅当：</p>
+    <p>① |i − j| ≤ d；② h<sub>i</sub> &gt; h<sub>j</sub>；③ i、j 之间的所有平台高度都严格小于 h<sub>i</sub>。</p>
+    <p>可以从任意平台出发，求最多能经过多少个平台，出发的平台也计入答案。</p>
+    <h4>输入格式</h4>
+    <div class="io">第一行两个整数 n, d
+第二行 n 个整数 h[1..n]</div>
+    <h4>输出格式</h4>
+    <div class="io">一个整数，表示最多经过的平台数</div>
+    <h4>样例</h4>
+    <div class="io">输入
+9 2
+9 2 3 4 8 1 7 5 6
+
+输出
+4</div>
+    <p style="margin-top:8px">一条最优路线：5 号（高 8）→ 4 号（高 4）→ 3 号（高 3）→ 2 号（高 2），共 4 层。</p>
+    <h4>数据规模</h4>
+    <p>标程按 n ≤ 2×10<sup>5</sup> 设计，高度用 64 位整数存储。部分分：n, d ≤ 10（16 分）、n, d ≤ 10<sup>3</sup>（48 分）。</p>
+    <h4>标程与题解</h4>
+    <p>本页结论与代码来自模考 2 标程：<a href="../CSP-S%20复赛模考%202%20标程%20%26%20题解/T2_谁能下到100层（100%20分，单调栈）.cpp" target="_blank" rel="noopener">100 分 · 单调栈</a> · <a href="../CSP-S%20复赛模考%202%20标程%20%26%20题解/CSP-S%20复赛模考%202%20题解.pdf" target="_blank" rel="noopener">题解 PDF</a></p>
+  </div>
+</div>
+
+<div class="modal" id="finishModal" aria-hidden="true">
+  <div class="modal-bg" data-close></div>
+  <div class="confetti" id="confetti"></div>
+  <div class="modal-card finish-card" role="dialog" aria-modal="true" aria-label="通关">
+    <button class="modal-close" data-close aria-label="关闭">×</button>
+    <div class="finish-sub">DEPTH REACHED</div>
+    <div class="finish-num">100<span style="font-size:26px">层</span></div>
+    <div class="finish-sub">全程通关 · 你已经掌握了 O(n log n) 做法（可优化到 O(n)）</div>
+    <div class="finish-note"><b>动画通关 ≠ 会写。</b> 关掉页面后完成三件事：① 口述为什么反向只看最近更高；② 手写单调栈求 L/R；③ 写 C++ 并与暴力对拍。</div>
+    <div class="finish-list">
+      <div><b>① 正难则反</b>　把向下的边翻过来，变成向最近更高平台的上坡边。</div>
+      <div><b>② 贪心引理</b>　更远的更高平台会被中间的更高平台挡住，停在中间只会多踩一层。</div>
+      <div><b>③ 单调栈</b>　一次扫描求出每个点左右最近的更高平台，O(n)。</div>
+      <div><b>④ DAG 上 DP</b>　边只从低到高，按高度倒序填表；排序带来 O(n log n)，可改用记忆化/拓扑做到 O(n)。</div>
+    </div>
+    <div class="actions" style="justify-content:center">
+      <button class="btn primary" id="finishAgain">再走一遍</button>
+      <button class="btn ghost" data-close>留在这里</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   谁能下到 100 层 · CSP-S T2 可视化闯关
+   单文件 / 无外部依赖
+   ============================================================ */
+(() => {
+'use strict';
+
+const $  = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => Number(n).toLocaleString('en-US');
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+
+/* ---------------- 核心算法 ---------------- */
+// i 的全部合法落点（正向下坡）
+function validNexts(h, d, i) {
+  const out = [];
+  for (let j = i - 1; j >= Math.max(0, i - d) && h[j] < h[i]; --j) out.push(j);
+  for (let j = i + 1; j <= Math.min(h.length - 1, i + d) && h[j] < h[i]; ++j) out.push(j);
+  return out;
+}
+// 正向 DP：f[i] = 从 i 出发最多踩几层
+function solveForward(h, d) {
+  const n = h.length, f = new Array(n).fill(0);
+  const dfs = i => {
+    if (f[i]) return f[i];
+    let r = 1;
+    for (const j of validNexts(h, d, i)) r = Math.max(r, dfs(j) + 1);
+    return f[i] = r;
+  };
+  for (let i = 0; i < n; i++) dfs(i);
+  return f;
+}
+function bestStart(h, d, f) {
+  let bi = 0;
+  for (let i = 1; i < h.length; i++) if (f[i] > f[bi]) bi = i;
+  return bi;
+}
+function bestPath(h, d, f, start) {
+  const path = [start];
+  let cur = start;
+  while (true) {
+    let nx = -1, bv = -1;
+    for (const j of validNexts(h, d, cur)) if (f[j] > bv) { bv = f[j]; nx = j; }
+    if (nx < 0) break;
+    path.push(nx); cur = nx;
+  }
+  return path;
+}
+// 单调栈：左右最近的严格更高平台（超出 d 则视为没有）
+function computeParents(h, d) {
+  const n = h.length, L = new Array(n).fill(-1), R = new Array(n).fill(-1), st = [];
+  for (let i = 0; i < n; i++) {
+    while (st.length && h[st[st.length - 1]] <= h[i]) st.pop();
+    if (st.length && i - st[st.length - 1] <= d) L[i] = st[st.length - 1];
+    st.push(i);
+  }
+  st.length = 0;
+  for (let i = n - 1; i >= 0; i--) {
+    while (st.length && h[st[st.length - 1]] <= h[i]) st.pop();
+    if (st.length && st[st.length - 1] - i <= d) R[i] = st[st.length - 1];
+    st.push(i);
+  }
+  return { L, R };
+}
+function solveReverse(h, d) {
+  const { L, R } = computeParents(h, d);
+  const n = h.length, dp = new Array(n).fill(1);
+  const order = [...Array(n).keys()].sort((a, b) => h[b] - h[a]);
+  for (const i of order) {
+    if (L[i] >= 0) dp[i] = Math.max(dp[i], dp[L[i]] + 1);
+    if (R[i] >= 0) dp[i] = Math.max(dp[i], dp[R[i]] + 1);
+  }
+  let ans = 0;
+  for (const v of dp) ans = Math.max(ans, v);
+  return { L, R, dp, ans, order };
+}
+// 无记忆化时 dfs(i) 的调用次数（树上节点数）
+function callCounts(h, d) {
+  const n = h.length, cnt = new Array(n).fill(0);
+  const go = i => {
+    if (cnt[i]) return cnt[i];
+    let s = 1;
+    for (const j of validNexts(h, d, i)) s += go(j);
+    return cnt[i] = s;
+  };
+  for (let i = 0; i < n; i++) go(i);
+  return cnt;
+}
+
+/* ---------------- 全局视觉状态 ---------------- */
+const V = {
+  h: [], d: 1, n: 0, maxH: 1,
+  cur: -1,
+  visited: new Set(),
+  reach: new Set(),
+  blockers: new Set(),
+  badges: {},          // i -> {text, tone}
+  edges: [],           // {a,b,kind,label}
+  focus: -1,
+  target: -1,
+  dim: false,
+  stack: null,         // {items, popped, label}
+  noHero: false,
+  trace: [],
+};
+let GEO = null;
+let lock = false;
+let heroToken = 0;
+let chapterToken = 0;
+let currentChapter = 0;
+let api = {};
+
+const svg = $('#tower');
+const gridLayer = $('#gridLayer');
+const barLayer = $('#barLayer');
+const edgeLayer = $('#edgeLayer');
+const badgeLayer = $('#badgeLayer');
+const hero = $('#hero');
+const fxLayer = $('#fxLayer');
+const stackPanel = $('#stackPanel');
+const statusBar = $('#statusBar');
+const statusText = $('#statusText');
+const toastEl = $('#toast');
+
+function setScene(h, d, opts = {}) {
+  V.h = h.slice(); V.d = d; V.n = h.length;
+  V.maxH = Math.max(1, ...h);
+  V.cur = -1; V.visited = new Set(); V.reach = new Set(); V.blockers = new Set();
+  V.badges = {}; V.edges = []; V.focus = -1; V.target = -1;
+  V.dim = false; V.stack = null; V.noHero = false; V.trace = [];
+  stackPanel.classList.remove('on');
+  fxLayer.innerHTML = '';
+  hero.style.display = 'none';
+  heroToken++;
+  if (opts.dim) V.dim = true;
+  renderStage();
+  $('#sceneTag').textContent = opts.tag || `SCENE ${String(currentChapter + 1).padStart(2, '0')} · ${h.length} 个平台 · d = ${d}`;
+}
+
+function say(html, tone = 'info') {
+  statusText.innerHTML = html;
+  statusBar.dataset.tone = tone;
+}
+
+let toastTimer = 0;
+function toast(msg, tone = 'bad') {
+  toastEl.className = 'toast show ' + tone;
+  toastEl.innerHTML = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+}
+
+/* 几何 + 渲染 */
+function renderStage() {
+  if (!V.n) return;
+  const r = svg.getBoundingClientRect();
+  const W = Math.max(320, Math.round(r.width) || 900);
+  const H = Math.max(300, Math.round(r.height) || 560);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const padL = Math.min(40, W * .04), padR = padL;
+  const padT = Math.min(110, H * .19);
+  const padB = 92;
+  const baseline = H - padB;
+  const plotH = Math.max(90, baseline - padT);
+  const step = (W - padL - padR) / V.n;
+  const barW = clamp(step * .62, 3.5, 52);
+  const X = i => padL + (i + .5) * step;
+  const TOP = i => baseline - (V.h[i] / V.maxH) * plotH;
+  GEO = { W, H, X, TOP, baseline, step, barW };
+
+  const many = V.n > 26;
+  const tooMany = V.n > 44;
+
+  // 网格
+  let grid = '';
+  for (let k = 0; k <= 4; k++) {
+    const y = baseline - plotH * k / 4;
+    grid += `<line x1="${padL * .4}" y1="${y}" x2="${W - padR * .4}" y2="${y}" stroke="rgba(125,180,255,.075)" stroke-width="1" stroke-dasharray="${k === 0 ? '0' : '2 7'}"/>`;
+  }
+  // 基线
+  grid += `<line x1="${padL * .4}" y1="${baseline}" x2="${W - padR * .4}" y2="${baseline}" stroke="rgba(125,211,252,.22)" stroke-width="1"/>`;
+  gridLayer.innerHTML = grid;
+
+  // 平台
+  let bars = '';
+  for (let i = 0; i < V.n; i++) {
+    const isCur = i === V.cur;
+    const isVis = V.visited.has(i);
+    const isReach = V.reach.has(i);
+    const isFocus = i === V.focus;
+    const isBlock = V.blockers.has(i);
+    const isTarget = i === V.target;
+    let cls = 'bar';
+    if (isCur) cls += ' cur';
+    if (isVis) cls += ' vis';
+    if (isReach) cls += ' reach';
+    if (isFocus) cls += ' focus';
+    if (isBlock) cls += ' block';
+    if (isTarget) cls += ' target';
+    if (V.dim && !isCur && !isFocus && !isReach && !isBlock) cls += ' dim';
+    const fill = isCur ? 'gBarCur' : isVis ? 'gBarVis' : 'gBar';
+    const cap = isBlock ? '#fb7185' : isCur ? '#fbbf24' : isTarget ? '#fbbf24' : isFocus ? '#f472b6' : isReach ? '#34d399' : isVis ? '#a78bfa' : '#38bdf8';
+    const y = TOP(i);
+    const hgt = Math.max(2, baseline - y);
+    const topY = y;
+    const hitW = Math.max(barW + 10, Math.min(step, 40));
+    const glow = (isCur || isReach || isFocus || isBlock || isTarget) ? ' filter="url(#fGlow)"' : '';
+    bars += `<g class="${cls}" data-i="${i}" role="button" tabindex="0" aria-label="${i + 1} 号平台，高 ${V.h[i]}">`;
+    bars += `<rect x="${X(i) - hitW / 2}" y="${topY - 34}" width="${hitW}" height="${hgt + 40}" fill="transparent"/>`;
+    bars += `<rect class="body" x="${X(i) - barW / 2}" y="${y}" width="${barW}" height="${hgt}" rx="${Math.min(7, barW / 2.4)}" fill="url(#${fill})"/>`;
+    bars += `<rect x="${X(i) - barW / 2}" y="${y - 2}" width="${barW}" height="4" rx="2" fill="${cap}"${glow}/>`;
+    if (isVis && !isCur) bars += `<circle cx="${X(i)}" cy="${y - 12}" r="2.6" fill="#a78bfa" opacity=".85"/>`;
+    if (isReach) bars += `<circle class="reach-dot" cx="${X(i)}" cy="${y - 17}" r="4.2"/>`;
+    if (!tooMany) bars += `<text class="hlabel ${isCur ? 'in' : ''}" x="${X(i)}" y="${isCur ? y + 17 : y - (isReach ? 28 : 11)}">${V.h[i]}</text>`;
+    if (!tooMany) bars += `<text class="idxlabel" x="${X(i)}" y="${baseline + 19}">${i + 1}</text>`;
+    if (isTarget) bars += `<circle class="target-ring" cx="${X(i)}" cy="${y - 11}" r="${Math.max(12, barW * .78)}"/>`;
+    if (isBlock) bars += `<circle class="block-ring" cx="${X(i)}" cy="${y - 14}" r="${Math.max(12, barW * .72)}"/>`;
+    bars += `</g>`;
+  }
+  barLayer.innerHTML = bars;
+
+  // 边
+  let edges = '';
+  for (const e of V.edges) {
+    if (e.a < 0 || e.a >= V.n || e.b < 0 || e.b >= V.n) continue;
+    const x1 = X(e.a), y1 = TOP(e.a) - 5;
+    const x2 = X(e.b), y2 = TOP(e.b) - 6;
+    const dx = Math.abs(x2 - x1);
+    const lift = Math.min(H * .3, 24 + dx * .2);
+    const cy = Math.min(y1, y2) - lift;
+    const marker = e.kind === 'block' ? 'mBlock' : e.kind === 'trace' ? 'mTrace'
+      : e.kind === 'parentL' || e.kind === 'parentL-soft' ? 'mParent'
+      : e.kind === 'parentR' || e.kind === 'parentR-soft' ? 'mParentR' : 'mJump';
+    edges += `<path class="edge ${e.kind}${e.still ? ' still' : ''}" pathLength="100" d="M${x1},${y1} Q${(x1 + x2) / 2},${cy} ${x2},${y2}" marker-end="url(#${marker})"/>`;
+  }
+  edgeLayer.innerHTML = edges;
+
+  // 徽章
+  let badges = '';
+  for (const k of Object.keys(V.badges)) {
+    const i = +k, b = V.badges[i];
+    if (i >= V.n) continue;
+    const text = String(b.text);
+    const w = Math.max(28, text.length * 6.6 + 12);
+    const y = TOP(i) - (V.reach.has(i) ? 44 : 30) - (i === V.cur && !V.noHero ? 24 : 0);
+    badges += `<g class="badge ${b.tone || 'amber'}" transform="translate(${X(i)},${y})">
+      <rect x="${-w / 2}" y="-10" width="${w}" height="19" rx="9.5"/>
+      <text y="0">${esc(text)}</text></g>`;
+  }
+  for (const i of V.blockers) {
+    const y = TOP(i) - 31;
+    badges += `<g class="badge red" transform="translate(${X(i)},${y})">
+      <rect x="-19" y="-10" width="38" height="19" rx="9.5"/>
+      <text y="0">挡住</text></g>`;
+  }
+  badgeLayer.innerHTML = badges;
+
+  placeHero();
+  renderStack();
+}
+
+function placeHero() {
+  if (V.cur < 0 || V.cur >= V.n || V.noHero || !GEO) { hero.style.display = 'none'; return; }
+  hero.style.display = '';
+  hero.setAttribute('transform', `translate(${GEO.X(V.cur)},${GEO.TOP(V.cur) - 1})`);
+}
+
+function heroJump(from, to) {
+  const my = ++heroToken;
+  return new Promise(resolve => {
+    if (!GEO) return resolve();
+    const x1 = GEO.X(from), y1 = GEO.TOP(from) - 1;
+    const x2 = GEO.X(to), y2 = GEO.TOP(to) - 1;
+    const cy = Math.min(y1, y2) - Math.min(150, 38 + Math.abs(x2 - x1) * .16);
+    const dur = 520, t0 = performance.now();
+    hero.style.display = '';
+    hero.classList.add('jumping');
+    const tick = now => {
+      if (my !== heroToken) { hero.classList.remove('jumping'); resolve(); return; }
+      const t = clamp((now - t0) / dur, 0, 1);
+      const e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const x = (1 - e) * (1 - e) * x1 + 2 * (1 - e) * e * ((x1 + x2) / 2) + e * e * x2;
+      const y = (1 - e) * (1 - e) * y1 + 2 * (1 - e) * e * cy + e * e * y2;
+      hero.setAttribute('transform', `translate(${x},${y})`);
+      const rot = Math.sin(Math.PI * e) * clamp((x2 - x1) * .35, -25, 25);
+      hero.querySelector('.hero-bob').style.transform = `rotate(${rot}deg)`;
+      if (t < 1) requestAnimationFrame(tick);
+      else {
+        hero.querySelector('.hero-bob').style.transform = '';
+        hero.classList.remove('jumping');
+        ripple(to);
+        resolve();
+      }
+    };
+    requestAnimationFrame(tick);
+  });
+}
+function ripple(i) {
+  if (!GEO) return;
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('class', 'ripple');
+  c.setAttribute('cx', GEO.X(i)); c.setAttribute('cy', GEO.TOP(i) - 2);
+  c.setAttribute('r', 4);
+  fxLayer.appendChild(c);
+  setTimeout(() => c.remove(), 800);
+}
+
+function renderStack() {
+  const st = V.stack;
+  const stageEl = $('#stage');
+  if (!st) { stackPanel.classList.remove('on'); stackPanel.innerHTML = ''; stageEl.classList.remove('has-stack'); return; }
+  stackPanel.classList.add('on');
+  stageEl.classList.add('has-stack');
+  const chips = st.items.length
+    ? st.items.map((i, k) => `<span class="schip ${k === st.items.length - 1 ? 'top' : ''}">${i + 1}<small>h${V.h[i]}</small></span>`).join('')
+    : '<span class="sempty">空</span>';
+  const popped = st.popped && st.popped.length
+    ? st.popped.map(i => `<span class="schip pop">${i + 1}<small>h${V.h[i]}</small></span>`).join('')
+    : '';
+  stackPanel.innerHTML = `<div class="stack-box">
+    <div class="stack-label">${esc(st.label || '单调栈 · 栈底 → 栈顶')}</div>
+    <div class="stack-row">${chips}${popped ? '<span class="sdiv"></span>' + popped : ''}</div>
+  </div>`;
+}
+
+/* ---------------- 右侧面板 ---------------- */
+const P = { eyebrow: '', title: '', body: '', callout: null, code: null, stats: [], actions: [] };
+const panelScroll = $('#panelScroll');
+const pEyebrow = $('#pEyebrow'), pTitle = $('#pTitle'), pBody = $('#pBody');
+const pCallout = $('#pCallout'), pCode = $('#pCode'), pStats = $('#pStats'), pActions = $('#pActions');
+
+function codeHTML(code) {
+  const lines = code.lines.map((ln, idx) => {
+    const hl = code.hl === idx ? ' hl' : (code.hl2 === idx ? ' hl2' : '');
+    return `<div class="cl${hl}"><span class="ln">${idx + 1}</span><span>${ln}</span></div>`;
+  }).join('');
+  return `<div class="code-card">
+    <div class="code-head"><span>${esc(code.title || 'pseudo.cpp')}</span><button data-act="copyCode">复制</button></div>
+    <pre class="code">${lines}</pre>
+  </div>`;
+}
+function renderPanel() {
+  const sc = panelScroll.scrollTop;
+  pEyebrow.innerHTML = P.eyebrow;
+  pTitle.textContent = P.title;
+  pBody.innerHTML = P.body;
+  pCallout.innerHTML = P.callout
+    ? `<div class="callout ${P.callout.tone}"><span class="ct">${esc(P.callout.label || 'INSIGHT')}</span>${P.callout.html}</div>` : '';
+  pCode.innerHTML = P.code ? codeHTML(P.code) : '';
+  pStats.innerHTML = P.stats.map(s =>
+    `<div class="stat ${s.cls || ''} ${s.wide ? 'wide' : ''}"><div class="k">${esc(s.k)}</div><div class="v">${s.v}${s.small ? `<small>${esc(s.small)}</small>` : ''}</div></div>`).join('');
+  pActions.innerHTML = P.actions.map(a =>
+    `<button class="btn ${a.kind || 'ghost'}" data-act="${a.id}" ${a.disabled ? 'disabled' : ''}>${a.label}</button>`).join('');
+  panelScroll.scrollTop = sc;
+}
+
+panelScroll.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const id = b.dataset.act;
+  if (id === 'copyCode') {
+    const txt = [...pCode.querySelectorAll('.cl')].map(l => l.textContent.replace(/^\d+\s*/, '')).join('\n');
+    navigator.clipboard?.writeText(txt).then(() => toast('代码已复制', 'good')).catch(() => toast('复制失败，可手动选择'));
+    return;
+  }
+  if (typeof api[id] === 'function') api[id]();
+});
+
+/* 塔上的点击 / 键盘 */
+svg.addEventListener('click', e => {
+  const g = e.target.closest('.bar');
+  if (!g || lock) return;
+  const i = +g.dataset.i;
+  if (typeof api.platform === 'function') api.platform(i);
+});
+svg.addEventListener('keydown', e => {
+  const g = e.target.closest?.('.bar');
+  if (!g) return;
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    if (!lock && typeof api.platform === 'function') api.platform(+g.dataset.i);
+  }
+});
+
+/* ---------------- 章节导航 ---------------- */
+const CHAPTERS = [
+  { t: '规则', award: 10 },
+  { t: '暴力', award: 15 },
+  { t: '记忆化', award: 15 },
+  { t: '逆向', award: 15 },
+  { t: '单调栈', award: 15 },
+  { t: 'DP', award: 15 },
+  { t: '挑战', award: 15 },
+];
+const completed = new Set();
+const nav = $('#chapterNav');
+
+function buildNav() {
+  nav.innerHTML = CHAPTERS.map((c, i) =>
+    `<button class="chip" data-ch="${i}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="t">${c.t}</span><span class="tick"></span></button>`).join('');
+  nav.addEventListener('click', e => {
+    const b = e.target.closest('[data-ch]');
+    if (!b) return;
+    go(+b.dataset.ch);
+  });
+}
+function syncNav() {
+  $$('.chip', nav).forEach((b, i) => {
+    b.classList.toggle('active', i === currentChapter);
+    b.classList.toggle('done', completed.has(i));
+  });
+  const act = nav.querySelector('.chip.active');
+  if (act) act.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+function updateDepth() {
+  const pts = [...completed].reduce((s, i) => s + CHAPTERS[i].award, 0);
+  $('#depthNum').textContent = pts;
+  $('#depthFill').style.width = pts + '%';
+}
+function award(amount) {
+  if (completed.has(currentChapter)) return;
+  completed.add(currentChapter);
+  syncNav(); updateDepth();
+  if (completed.size === CHAPTERS.length) setTimeout(showFinish, 900);
+}
+function showFinish() {
+  const m = $('#finishModal');
+  m.classList.add('on'); m.setAttribute('aria-hidden', 'false');
+  const box = $('#confetti');
+  box.innerHTML = '';
+  const colors = ['#5eead4', '#38bdf8', '#a78bfa', '#fbbf24', '#fb7185', '#34d399'];
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('i');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDuration = (2.2 + Math.random() * 2) + 's';
+    s.style.animationDelay = (Math.random() * .8) + 's';
+    s.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+    s.style.opacity = .55 + Math.random() * .45;
+    box.appendChild(s);
+  }
+}
+
+/* ---------------- 公共小工具 ---------------- */
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+function nearestGreater(h, i, dir) {
+  for (let p = i + dir; p >= 0 && p < h.length; p += dir) if (h[p] > h[i]) return p;
+  return -1;
+}
+// 把 i 判为非法的原因说清楚
+function invalidReason(h, d, cur, i) {
+  if (i === cur) return { text: '已经站在这里了', blocker: -1 };
+  if (h[i] >= h[cur]) return { text: `${i + 1} 号高 ${h[i]}，不比起跳平台的 ${h[cur]} 矮`, blocker: -1 };
+  if (Math.abs(i - cur) > d) return { text: `水平距离 ${Math.abs(i - cur)} 超过 d = ${d}`, blocker: -1 };
+  const dir = Math.sign(i - cur);
+  for (let k = cur + dir; k !== i; k += dir) {
+    if (h[k] >= h[cur]) return { text: `${k + 1} 号（高 ${h[k]}）横在中间，把路挡住了`, blocker: k };
+  }
+  return { text: '这里不是合法落点', blocker: -1 };
+}
+function buildStackSteps(h, d) {
+  const n = h.length, out = [];
+  let st = [];
+  for (let i = 0; i < n; i++) {
+    const before = st.slice(), pops = [];
+    while (st.length && h[st[st.length - 1]] <= h[i]) pops.push(st.pop());
+    let par = -1, dist = -1, cut = -1;
+    if (st.length) {
+      dist = i - st[st.length - 1];
+      if (dist <= d) par = st[st.length - 1]; else cut = st[st.length - 1];
+    }
+    st.push(i);
+    out.push({ dir: 'L', i, before, pops, after: st.slice(), par, dist, cut });
+  }
+  st = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const before = st.slice(), pops = [];
+    while (st.length && h[st[st.length - 1]] <= h[i]) pops.push(st.pop());
+    let par = -1, dist = -1, cut = -1;
+    if (st.length) {
+      dist = st[st.length - 1] - i;
+      if (dist <= d) par = st[st.length - 1]; else cut = st[st.length - 1];
+    }
+    st.push(i);
+    out.push({ dir: 'R', i, before, pops, after: st.slice(), par, dist, cut });
+  }
+  return out;
+}
+
+/* ============================================================
+   第 1 章 · 规则
+   ============================================================ */
+function initCh1() {
+  const h = [3, 7, 5, 9, 4, 8, 6, 2], d = 3, n = h.length;
+  const token = chapterToken;
+  let started = false, quizShown = false, done = false;
+
+  setScene(h, d, { tag: 'SCENE 01 · 8 个平台 · d = 3' });
+  V.noHero = true;
+
+  const rules = () => `<div class="rules">
+      <div class="rule"><span class="k">01</span><div>水平距离 <b>|i − j| ≤ d</b>，这里 d = 3</div></div>
+      <div class="rule"><span class="k">02</span><div>目标更矮：<b>h[j] &lt; h[i]</b></div></div>
+      <div class="rule"><span class="k">03</span><div>中间不能有高个子：所有 h[k] <b>&lt; h[i]</b></div></div>
+    </div>`;
+
+  const baseBody = () => `<p>天台上有 <b>8</b> 个平台，从左到右排开。你是一个想往下走的小人，每次只能跳到<b>更矮</b>的平台。</p>
+    <p>一条合法的跳跃要同时满足三个条件：</p>${rules()}
+    <p>第三条最容易被漏掉——<b>高个子会把后面的整条路挡住</b>。点击任意平台，先站上去看看。</p>`;
+
+  P.eyebrow = 'CHAPTER 01 · 规则';
+  P.title = '先学会怎么跳';
+  P.body = baseBody();
+  P.callout = { tone: 'insight', label: '先走走看', html: '先凭直觉走一遍，看看能下几层。规则测验之后，我们再揭晓最优解。' };
+  P.code = {
+    title: '合法落点 · 左右各扫一段', lines: [
+      'for (int j = i - 1; j >= max(1, i - d); --j) {',
+      '    if (h[j] >= h[i]) break;   <span class="cm">// 被挡住</span>',
+      '    <span class="cm">// 否则 j 是一个合法落点</span>',
+      '}',
+      '<span class="cm">// 向右同理</span>'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '8' }, { k: '距离限制', v: 'd = 3' }];
+  P.actions = [{ id: 'restart', label: '重开', kind: 'ghost' }];
+  say('点击任意一个平台，小人会在上面等你。');
+  renderPanel();
+
+  api = {
+    restart: () => go(0),
+    next: () => go(1),
+    platform: async i => {
+      if (lock) return;
+      if (quizShown && !done) return;
+      if (!started) {
+        started = true;
+        V.cur = i; V.visited = new Set([i]);
+        V.reach = new Set(validNexts(h, d, i));
+        V.noHero = false;
+        renderStage();
+        P.body = `<p>你站在 <b>${i + 1} 号</b>（高 ${h[i]}）。绿色光点是这一跳的全部合法落点。</p>
+          ${rules()}
+          <p>点一个绿点，小人会跳过去；每多踩一块平台，深度 +1。</p>`;
+        P.actions = [{ id: 'restart', label: '重开' }];
+        P.stats = [{ k: '当前深度', v: '1 层' }, { k: '合法落点', v: String(V.reach.size) }];
+        renderPanel();
+        if (V.reach.size === 0) {
+          P.callout = { tone: 'warn', label: '这里下不去', html: `从 <b>${i + 1} 号</b>出发没有任何合法落点。换一个更高的平台试试，或者点“重开”。` };
+          renderPanel();
+          say(`你站在 <b>${i + 1} 号</b>（高 ${h[i]}），但周围没有更矮、又够得着的平台。`, 'warn');
+          return;
+        }
+        say(`你站在 <b>${i + 1} 号</b>（高 ${h[i]}）。这一跳有 <em>${V.reach.size}</em> 个合法落点。`, 'good');
+        return;
+      }
+      if (i === V.cur) return;
+      if (V.reach.has(i)) {
+        lock = true;
+        const from = V.cur;
+        await heroJump(from, i);
+        if (token !== chapterToken) { lock = false; return; }
+        V.cur = i; V.visited.add(i);
+        V.reach = new Set(validNexts(h, d, i));
+        V.blockers = new Set(); V.edges = [];
+        renderStage();
+        lock = false;
+        P.stats = [{ k: '当前深度', v: `${V.visited.size} 层` }, { k: '最优深度', v: quizShown ? '4 层' : '？', cls: quizShown ? 'ok' : '' }];
+        if (!quizShown) { showQuiz(); return; }
+        if (V.reach.size === 0) {
+          say(`落地 <b>${i + 1} 号</b>（高 ${h[i]}），四面都是更高的平台——这条路到头了。`, 'warn');
+          P.callout = { tone: 'warn', label: '走到底了', html: `你的深度是 <b>${V.visited.size}</b> 层。点“重开”换一条路，或者直接进入下一章。` };
+        } else {
+          say(`落地 <b>${i + 1} 号</b>（高 ${h[i]}），还能继续跳 <em>${V.reach.size}</em> 个落点。`);
+          P.callout = null;
+        }
+        renderPanel();
+        return;
+      }
+      // 非法点击
+      const r = invalidReason(h, d, V.cur, i);
+      V.blockers = new Set(r.blocker >= 0 ? [r.blocker] : []);
+      V.edges = r.blocker >= 0 ? [{ a: V.cur, b: i, kind: 'block' }] : [];
+      V.target = i;
+      V.reach = new Set();
+      renderStage();
+      toast(esc(r.text));
+      say(`这一步不合法：${esc(r.text)}。`, 'bad');
+      setTimeout(() => {
+        if (token !== chapterToken || !started || lock) return;
+        V.blockers = new Set(); V.edges = []; V.target = -1;
+        V.reach = new Set(validNexts(h, d, V.cur));
+        renderStage();
+      }, 1500);
+    },
+    quizYes: () => wrongAnswer(),
+    quizNo: () => rightAnswer(),
+  };
+
+  function showQuiz() {
+    quizShown = true;
+    V.focus = 5; V.target = 2; V.blockers = new Set([3]);
+    V.edges = [{ a: 5, b: 2, kind: 'block' }];
+    V.reach = new Set();
+    renderStage();
+    P.body = `<p>小测验：现在看 <b>6 号</b>（高 8）。它能不能直接跳到 <b>3 号</b>（高 5）？</p>
+      <p>距离 |6 − 3| = 3 ≤ d，目标也确实更矮。看起来可以？</p>`;
+    P.callout = { tone: 'warn', label: '想一想', html: '规则第三条：i、j 之间的<b>所有</b>平台都要严格低于起跳平台。' };
+    P.stats = [{ k: '当前深度', v: `${V.visited.size} 层` }, { k: '最优深度', v: '？' }];
+    P.actions = [
+      { id: 'quizYes', label: '能，前两条都满足' },
+      { id: 'quizNo', label: '不能，中间被挡住了' },
+    ];
+    renderPanel();
+    say('小测验：6 号 → 3 号，中间发生了什么？', 'warn');
+  }
+
+  function wrongAnswer() {
+    V.blockers = new Set([3]);
+    renderStage();
+    toast('4 号平台高 9，不矮于 8，把 3 号挡在了后面');
+    P.callout = { tone: 'danger', label: '再看一眼', html: '<b>4 号</b>（高 9）站在 6 号和 3 号之间。它比 8 高，所以这一跳不合法——哪怕目标更矮、距离也够。' };
+    renderPanel();
+  }
+
+  function rightAnswer() {
+    done = true;
+    V.focus = -1; V.target = -1; V.blockers = new Set(); V.edges = [];
+    V.reach = new Set(validNexts(h, d, V.cur));
+    renderStage();
+    P.body = `<p>正确。4 号（高 9）横在中间，6 号的手够不到 3 号。</p>
+      <p>把三条规则合起来看，所谓“能跳”，就是<b>从 i 出发向两边扫，直到遇到第一个不比自己矮的平台为止</b>；这段区间里所有更矮的平台都是合法落点。</p>
+      ${rules()}
+      <p>你已经可以继续点绿点往下走了。走到底或者玩够了，就进入下一章。</p>`;
+    P.callout = { tone: 'good', label: '规则通关', html: '第三条是本题的“隐藏门槛”。后面的正解，本质上就是在高效地找这个“第一个不矮于自己的平台”。' };
+    P.actions = [
+      { id: 'next', label: '进入下一章 →', kind: 'primary' },
+      { id: 'restart', label: '重开' },
+    ];
+    P.stats = [{ k: '当前深度', v: `${V.visited.size} 层` }, { k: '最优深度', v: '4 层', cls: 'ok' }];
+    award(10);
+    renderPanel();
+    say('答对了。规则三才是这道题真正的门槛。', 'good');
+  }
+}
+
+/* ============================================================
+   第 2 章 · 暴力 DFS
+   ============================================================ */
+function initCh2() {
+  const h = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3], d = 10, n = h.length;
+  const token = chapterToken;
+  let ran = false, running = false;
+
+  setScene(h, d, { tag: 'SCENE 02 · 阶梯塔 · d = n' });
+  V.noHero = true;
+
+  P.eyebrow = 'CHAPTER 02 · 暴力 DFS';
+  P.title = '能跳就跳，会怎样？';
+  P.body = `<p>最直接的做法：从每个平台出发，把所有能跳的落点都试一遍，取最大值。</p>
+    <p>这就是 16 分写法的核心。问题在于——<b>同一个平台会被反复计算</b>。</p>
+    <p>这组数据是严格下降的阶梯，d = n，所以每个平台都能跳到右边所有更矮的平台。点一下运行：</p>`;
+  P.callout = { tone: 'warn', label: '先猜一猜', html: '只有 10 个平台，你猜 <code>dfs</code> 一共会被调用多少次？' };
+  P.code = {
+    title: 'dfs(i) · 无记忆化', lines: [
+      'int dfs(int i) {',
+      '    int res = 1;',
+      '    for (int j : next(i))',
+      '        res = max(res, dfs(j) + 1);',
+      '    return res;',
+      '}'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '10' }, { k: '距离限制', v: 'd = 10' }];
+  P.actions = [{ id: 'run', label: '运行无记忆化 DFS', kind: 'primary' }];
+  say('点击运行，盯着调用次数。');
+  renderPanel();
+
+  api = {
+    restart: () => go(1),
+    next: () => go(2),
+    run: async () => {
+      if (running || ran) return;
+      running = true;
+      P.actions = [{ id: 'run', label: '运行中…', kind: 'primary', disabled: true }];
+      renderPanel();
+      const cnt = callCounts(h, d);
+      const total = cnt.reduce((a, b) => a + b, 0);
+      const t0 = performance.now(), dur = 1550;
+      for (let i = 0; i < n; i++) {
+        setTimeout(() => {
+          if (token !== chapterToken) return;
+          V.badges[i] = { text: '×' + cnt[i], tone: cnt[i] >= 64 ? 'red' : 'amber' };
+          renderStage();
+        }, 90 + i * 95);
+      }
+      await new Promise(resolve => {
+        const tick = now => {
+          if (token !== chapterToken) return resolve();
+          const t = clamp((now - t0) / dur, 0, 1);
+          say(`暴力 DFS 运行中…… 已调用 <em>${fmt(Math.round(total * easeOut(t)))}</em> 次`, 'warn');
+          if (t < 1) requestAnimationFrame(tick); else resolve();
+        };
+        requestAnimationFrame(tick);
+      });
+      if (token !== chapterToken) return;
+      ran = true; running = false;
+      V.badges = {};
+      for (let i = 0; i < n; i++) V.badges[i] = { text: '×' + cnt[i], tone: cnt[i] >= 64 ? 'red' : 'amber' };
+      renderStage();
+      const repeat = (1 - n / total) * 100;
+      say(`一共调用 <b>${fmt(total)}</b> 次，但不同的平台只有 <b>10</b> 个。`, 'bad');
+      P.body = `<p>最直接的做法：从每个平台出发，把所有能跳的落点都试一遍，取最大值。</p>
+        <p>结果一目了然：<b>${fmt(total)} 次调用</b>，其中绝大部分是在重复回答同一个问题。</p>
+        <p>看 1 号平台的调用树：它能跳到右边 9 个平台，每个平台又各自展开一棵子树，节点数正好是 <code>2⁹ = 512</code>。整张表加起来是 <code>2¹⁰ − 1 = 1023</code>。</p>
+        <p>同一份答案被反复算了成百上千遍——这就是“重复子问题”。</p>`;
+      P.callout = { tone: 'danger', label: '复杂度爆炸', html: 'n = 30 时，这种调用会超过 <b>5 亿</b>次。暴力搜索连 16 分都拿不稳，必须把算过的答案记下来。' };
+      P.stats = [
+        { k: '总调用', v: fmt(total), cls: 'hot' },
+        { k: '不同状态', v: '10' },
+        { k: '重复率', v: repeat.toFixed(1) + '%', wide: true },
+      ];
+      P.actions = [{ id: 'next', label: '把答案记下来 →', kind: 'primary' }, { id: 'restart', label: '重跑', kind: 'ghost' }];
+      award(15);
+      renderPanel();
+    }
+  };
+}
+
+/* ============================================================
+   第 3 章 · 记忆化
+   ============================================================ */
+function initCh3() {
+  const h = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3], d = 10, n = h.length;
+  const token = chapterToken;
+  let ran = false, running = false;
+
+  setScene(h, d, { tag: 'SCENE 03 · 记忆化 · 同一座塔' });
+  V.noHero = true;
+
+  P.eyebrow = 'CHAPTER 03 · 记忆化';
+  P.title = '把算过的答案存下来';
+  P.body = `<p>同一个平台，不管从哪里来问，答案都一样。第一次算完就写进 <code>dp[i]</code>，第二次直接返回。</p>
+    <p>只加一行：</p>`;
+  P.callout = { tone: 'insight', label: '关键', html: '先算右端，再算左端——因为左边的答案依赖右边。' };
+  P.code = {
+    title: 'dfs(i) · 记忆化', lines: [
+      'int &res = dp[i];',
+      'if (res) return res;   <span class="cm">// 算过就直接用</span>',
+      'res = 1;',
+      'for (int j : next(i))',
+      '    res = max(res, dfs(j) + 1);',
+      'return res;'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '10' }, { k: '上一章调用', v: '1,023', cls: 'hot' }];
+  P.actions = [{ id: 'memo', label: '开启记忆化，再跑一次', kind: 'primary' }];
+  say('再跑一次，这次每个平台只算一遍。');
+  renderPanel();
+
+  api = {
+    restart: () => go(2),
+    next: () => go(3),
+    memo: async () => {
+      if (running || ran) return;
+      running = true;
+      const f = solveForward(h, d);
+      const total = n;
+      P.actions = [{ id: 'memo', label: '计算中…', kind: 'primary', disabled: true }];
+      renderPanel();
+      for (let k = 0; k < n; k++) {
+        const i = n - 1 - k;
+        setTimeout(() => {
+          if (token !== chapterToken) return;
+          V.badges[i] = { text: 'dp=' + f[i], tone: 'violet' };
+          V.focus = i;
+          renderStage();
+        }, 60 + k * 105);
+      }
+      await new Promise(resolve => {
+        const t0 = performance.now(), dur = 1250;
+        const tick = now => {
+          if (token !== chapterToken) return resolve();
+          const t = clamp((now - t0) / dur, 0, 1);
+          say(`记忆化 DFS：已计算 <em>${Math.round(total * easeOut(t))}</em> / ${total} 个状态`, 'violet');
+          if (t < 1) requestAnimationFrame(tick); else resolve();
+        };
+        requestAnimationFrame(tick);
+      });
+      if (token !== chapterToken) return;
+      ran = true; running = false;
+      V.focus = -1;
+      V.badges = {};
+      for (let i = 0; i < n; i++) V.badges[i] = { text: 'dp=' + f[i], tone: 'violet' };
+      renderStage();
+      say(`只展开了 <b>10</b> 个状态，答案和暴力版完全一致。`, 'good');
+      P.body = `<p>同一个平台，不管从哪里来问，答案都一样。第一次算完就写进 <code>dp[i]</code>，第二次直接返回。</p>
+        <p>看头顶的徽章：从右往左，每个平台恰好被点亮一次，<b>10 个状态各展开一次</b>。</p>
+        <p>注意区分：函数仍可能被调用多次，但命中 <code>dp</code> 后直接返回，不再展开。这里的“10”是<b>展开计算的状态数</b>，不是函数调用次数。</p>
+        <p>每个状态最多扫描左右各 d 个位置，所以总复杂度是 <code>O(nd)</code>。n = d = 2000 时大约是 4×10⁶ 次转移，稳稳拿到 48 分。</p>`;
+      P.callout = { tone: 'good', label: '1,023 → 10', html: '记忆化把指数级搜索压成了 <b>O(nd)</b>。但 n 再大一个数量级，<b>O(nd)</b> 也不够看——下一章换个角度。' };
+      P.stats = [
+        { k: '展开状态', v: '10', cls: 'ok' },
+        { k: '对比暴力', v: '1,023', cls: 'hot' },
+        { k: '复杂度', v: 'O(nd)', wide: true },
+      ];
+      P.actions = [{ id: 'next', label: '还能更快 →', kind: 'primary' }, { id: 'restart', label: '重跑', kind: 'ghost' }];
+      award(15);
+      renderPanel();
+    }
+  };
+}
+
+/* ============================================================
+   第 4 章 · 逆向思维
+   ============================================================ */
+function initCh4() {
+  const h = [9, 2, 3, 4, 8, 1, 7, 5, 6], n = h.length;
+  let d = 2, done = false;
+  const clicked = new Set();
+  const token = chapterToken;
+
+  setScene(h, d, { tag: 'SCENE 04 · 逆向图 · d = 2' });
+  V.noHero = true;
+
+  const baseBody = () => `<p>正着跳，箭头朝下；如果<b>把每条边反过来</b>，箭头就朝上了——从矮平台，指向“接住它”的更高平台。</p>
+    <p>关键观察：每个平台向上的边，只需要保留两条——<b>左边最近的更高平台 L[i]</b> 和<b>右边最近的更高平台 R[i]</b>。</p>
+    <p>注意是<b>严格更高</b>：等高平台既当不了“父亲”，也会挡住后面更矮的平台。</p>
+    <p>点任意平台，看看它的“上一跳”在哪里：</p>`;
+
+  P.eyebrow = 'CHAPTER 04 · 逆向思维';
+  P.title = '把塔倒过来看';
+  P.body = baseBody();
+  P.callout = {
+    tone: 'insight', label: '为什么只看最近？',
+    html: '设 p &lt; q &lt; i，p 能直接跳到 i。q 在 p、i 之间，所以 h[q] &lt; h[p]，p→q 合法；又 q 是 i 左边最近的更高平台，q、i 之间都 ≤ h[i] &lt; h[q]，所以 q→i 也合法。距离限制对子区间同样成立。于是 p→i 可换成 p→q→i，还<b>多踩一层</b>。所以更远的 p 永远不用考虑。'
+  };
+  P.code = {
+    title: '倒着跳 · 每个点最多两条边', lines: [
+      '<span class="cm">// 从矮往高走，只保留最近的两个出口</span>',
+      'L[i] = 左边最近的、高度 &gt; h[i] 的平台;',
+      'R[i] = 右边最近的、高度 &gt; h[i] 的平台;',
+      '',
+      'dp[i] = 1 + max(dp[L[i]], dp[R[i]]);'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '9' }, { k: '距离限制', v: 'd = 2' }, { k: '每个点出边', v: '≤ 2', cls: 'ok', wide: true }];
+  P.actions = [
+    { id: 'd2', label: 'd = 2', kind: 'primary' },
+    { id: 'd9', label: 'd = 9（解除距离）' },
+    { id: 'restart', label: '重开', kind: 'ghost' },
+  ];
+  say('点一个平台，看看它倒着能跳到哪里。', 'violet');
+  renderPanel();
+
+  function focusOn(i, count = true) {
+    const { L, R } = computeParents(h, d);
+    V.d = d;
+    V.focus = i; V.target = -1; V.reach = new Set();
+    V.visited = new Set(); V.blockers = new Set(); V.badges = {}; V.edges = [];
+    if (L[i] >= 0) {
+      V.edges.push({ a: i, b: L[i], kind: 'parentL' });
+      V.badges[L[i]] = { text: 'L', tone: 'violet' };
+    }
+    if (R[i] >= 0) {
+      V.edges.push({ a: i, b: R[i], kind: 'parentR' });
+      V.badges[R[i]] = { text: 'R', tone: 'blue' };
+    }
+    renderStage();
+
+    const gl = nearestGreater(h, i, -1), gr = nearestGreater(h, i, 1);
+    const row = (tag, p) => {
+      if (p < 0) return `<div class="fc-row"><span class="up">↑ ${tag}</span> 这一侧没有更高的平台</div>`;
+      const dist = Math.abs(p - i);
+      if (dist <= d) return `<div class="fc-row"><span class="up">↑ ${tag}</span> ${p + 1} 号（高 ${h[p]}）· 距离 ${dist} ≤ d</div>`;
+      return `<div class="fc-row"><span class="up">↑ ${tag}</span> ${p + 1} 号（高 ${h[p]}）· 距离 ${dist} &gt; d，够不着</div>`;
+    };
+    const fc = `<div class="focus-card">
+      <div class="fc-h">REVERSE EDGES</div>
+      <div class="fc-t">${i + 1} 号平台 · 高 ${h[i]}</div>
+      ${row('L', gl)}
+      ${row('R', gr)}
+    </div>`;
+    P.body = baseBody() + fc;
+    if (count) clicked.add(i);
+    if (count && clicked.size >= 3 && !done) {
+      done = true;
+      P.callout = { tone: 'good', label: '逆向图成形', html: '每个点最多两条出边，而且都指向更高的平台——这张图<b>没有环</b>，可以直接 DP。' };
+      P.actions = [{ id: 'next', label: '怎么快速找 L / R？→', kind: 'primary' }, { id: 'd2', label: 'd = 2' }, { id: 'd9', label: 'd = 9' }];
+      award(15);
+    }
+    renderPanel();
+    const parts = [];
+    if (L[i] >= 0) parts.push(`左 → <em>${L[i] + 1}</em> 号`);
+    if (R[i] >= 0) parts.push(`右 → <em>${R[i] + 1}</em> 号`);
+    say(`<b>${i + 1} 号</b>（高 ${h[i]}）：${parts.length ? parts.join('，') : '两侧都没有可接住它的更高平台'}。`, 'violet');
+  }
+
+  api = {
+    platform: i => { if (!lock) focusOn(i); },
+    d2: () => setD(2),
+    d9: () => setD(9),
+    next: () => go(4),
+    restart: () => go(3),
+  };
+
+  function setD(nd) {
+    if (d === nd) return;
+    d = nd; V.d = nd;
+    $('#sceneTag').textContent = `SCENE 04 · 逆向图 · d = ${d}`;
+    P.actions = [
+      { id: 'd2', label: 'd = 2', kind: d === 2 ? 'primary' : 'ghost' },
+      { id: 'd9', label: 'd = 9（解除距离）', kind: d === 9 ? 'primary' : 'ghost' },
+      ...(done ? [{ id: 'next', label: '下一章 →', kind: 'violet' }] : []),
+      { id: 'restart', label: '重开', kind: 'ghost' },
+    ];
+    P.stats = [{ k: '平台数', v: '9' }, { k: '距离限制', v: 'd = ' + d }, { k: '每个点出边', v: '≤ 2', cls: 'ok', wide: true }];
+    focusOn(3, false);
+    toast(d === 9 ? 'd = 9：4 号左边最近的更高平台（1 号）现在够得着了' : 'd = 2：4 号左边最近的更高平台在 3 格外，左边直接断开', 'info');
+  }
+
+  focusOn(5, false);
+}
+
+/* ============================================================
+   第 5 章 · 单调栈
+   ============================================================ */
+function initCh5() {
+  const h = [9, 2, 3, 4, 8, 1, 7, 5, 6], d = 2, n = h.length;
+  const steps = buildStackSteps(h, d);
+  const token = chapterToken;
+  let k = 0, timer = 0, done = false;
+
+  setScene(h, d, { tag: 'SCENE 05 · 单调栈 · d = 2' });
+  V.noHero = true;
+
+  P.eyebrow = 'CHAPTER 05 · 单调栈';
+  P.title = '一次扫描，找到最近更高';
+  P.body = `<p>从左往右扫，维护一个高度<b>严格递减</b>的栈。栈里存的是：还没有被更高平台挡住、仍可能成为别人“左边最近更高”的候选。</p>
+    <p>来一个 i：</p>
+    <ul>
+      <li>把所有高度 <b>≤ h[i]</b> 的栈顶弹掉——它们被 i 挡住了，再也不可能当别人的“最近更高”；</li>
+      <li>弹完后的栈顶，就是 <b>L[i]</b>（还要检查距离 ≤ d）；</li>
+      <li>把 i 压进栈。</li>
+    </ul>
+    <p>从右往左再做一遍，得到 R[i]。每个位置最多进栈、出栈一次，总复杂度 <b>O(n)</b>。</p>`;
+  P.callout = { tone: 'insight', label: '为什么栈里是递减的？', html: '栈里任何一个更靠下的平台，都比它上面的更高。否则它早就被上面那个挡住了，应该被弹掉。' };
+  P.code = {
+    title: '左扫描 · 求 L[i]', lines: [
+      'for (int i = 1; i &lt;= n; ++i) {',
+      '    while (!S.empty() &amp;&amp; h[S.top()] &lt;= h[i])',
+      '        S.pop();          <span class="cm">// 被挡住</span>',
+      '    if (!S.empty() &amp;&amp; i - S.top() &lt;= d)',
+      '        L[i] = S.top();   <span class="cm">// 最近更高</span>',
+      '    S.push(i);',
+      '}'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '9' }, { k: '栈操作', v: 'O(n)' }];
+  P.actions = [];
+  renderPanel();
+
+  function stopAuto() {
+    if (timer) { clearInterval(timer); timer = 0; }
+  }
+
+  function show(idx) {
+    k = idx;
+    const st = steps[k];
+    const isLeft = st.dir === 'L';
+    V.cur = -1; V.focus = st.i; V.visited = new Set(); V.reach = new Set();
+    V.blockers = new Set(); V.badges = {};
+    if (st.par >= 0) V.badges[st.par] = { text: st.dir, tone: isLeft ? 'violet' : 'blue' };
+    V.edges = [];
+    for (let s = 0; s <= k; s++) {
+      const e = steps[s];
+      if (e.par >= 0) V.edges.push({ a: e.i, b: e.par, kind: e.dir === 'L' ? 'parentL' : 'parentR' });
+    }
+    V.edges.forEach((e, idx, arr) => { e.still = idx < arr.length - 1; });
+    V.stack = { items: st.after, popped: st.pops, label: `${isLeft ? 'L' : 'R'} 扫描 · 栈底 → 栈顶${st.pops.length ? ' · 右侧为刚弹出' : ''}` };
+    V.noHero = true;
+    renderStage();
+
+    let msg = `<b>i = ${st.i + 1}</b>（高 ${h[st.i]}）：`;
+    if (st.pops.length) msg += `弹出 ${st.pops.map(p => `<em>${p + 1}</em> 号`).join('、')}；`;
+    else if (st.before.length) msg += '栈顶更高，不用弹；';
+    else msg += '栈空，不弹；';
+    if (st.par >= 0) msg += `栈顶 <em>${st.par + 1}</em> 号距离 ${st.dist} ≤ d → ${st.dir}[${st.i + 1}] = ${st.par + 1}；`;
+    else if (st.cut >= 0) msg += `栈顶 ${st.cut + 1} 号距离 ${st.dist} &gt; d，这一侧断开；`;
+    else msg += `${st.dir}[${st.i + 1}] 不存在；`;
+    msg += `压入 ${st.i + 1}。`;
+    say(msg, isLeft ? 'violet' : 'info');
+
+    P.code.hl = st.pops.length ? 2 : st.par >= 0 ? 4 : 0;
+    P.stats = [
+      { k: '步骤', v: `${k + 1} / ${steps.length}`, small: isLeft ? '左扫描' : '右扫描' },
+      { k: '栈大小', v: String(st.after.length) },
+      { k: '当前边', v: st.par >= 0 ? `${st.dir}[${st.i + 1}] = ${st.par + 1}` : '无', wide: true },
+    ];
+    const last = k === steps.length - 1;
+    if (last && !done) { done = true; award(15); }
+    P.actions = [
+      { id: 'prev', label: '上一步', disabled: k === 0 },
+      { id: 'next', label: '下一步', kind: 'primary', disabled: last },
+      { id: 'auto', label: timer ? '暂停' : '自动播放' },
+      { id: 'reset', label: '重置' },
+    ];
+    if (done) P.actions.push({ id: 'toDP', label: '进入 DP →', kind: 'violet' });
+    renderPanel();
+  }
+
+  api = {
+    prev: () => { stopAuto(); if (k > 0) show(k - 1); },
+    next: () => { stopAuto(); if (k < steps.length - 1) show(k + 1); },
+    auto: () => {
+      if (timer) { stopAuto(); show(k); return; }
+      if (k >= steps.length - 1) return;
+      timer = setInterval(() => {
+        if (token !== chapterToken) { stopAuto(); return; }
+        if (k >= steps.length - 1) { stopAuto(); show(k); return; }
+        show(k + 1);
+      }, 900);
+      show(k);
+    },
+    reset: () => { stopAuto(); show(0); },
+    toDP: () => go(5),
+    restart: () => go(4),
+  };
+
+  show(0);
+}
+
+/* ============================================================
+   第 6 章 · 逆图 DP
+   ============================================================ */
+function initCh6() {
+  const h = [9, 2, 3, 4, 8, 1, 7, 5, 6], d = 2;
+  const { L, R, dp, ans, order } = solveReverse(h, d);
+  const f = solveForward(h, d);
+  const start = bestStart(h, d, f);
+  const path = bestPath(h, d, f, start);
+  const token = chapterToken;
+  let filled = false, running = false;
+
+  setScene(h, d, { tag: 'SCENE 06 · 逆图 DP · d = 2' });
+  V.noHero = true;
+
+  P.eyebrow = 'CHAPTER 06 · DAG 上 DP';
+  P.title = '从最高处，一层层往下填';
+  P.body = `<p>现在每个点最多两条出边，而且都指向更高的平台。顺着边走，高度严格上升——<b>不可能成环</b>。</p>
+    <p>于是可以定义 <code>dp[i]</code>：从 i 往上跳，最多能经过几层。转移只依赖两个父亲：</p>
+    <div class="rules">
+      <div class="rule"><span class="k">DP</span><div><b>dp[i] = 1 + max(dp[L[i]], dp[R[i]])</b>，没有父亲就是 1</div></div>
+    </div>
+    <p>只要按<b>高度从高到低</b>填表，算到谁时，它的父亲一定已经算好了。排序这一步是 <code>O(n log n)</code>；若想严格 <code>O(n)</code>，可改用记忆化 DFS 或拓扑排序。</p>`;
+  P.callout = { tone: 'insight', label: '答案在哪？', html: 'dp 是“往上走”的长度。从最大值的位置顺着父亲指针一路向上，再把这条链倒过来，就是一条最长的下坡路线。' };
+  P.code = {
+    title: '按高度倒序填表（排序 O(n log n)）', lines: [
+      'dp[i] = 1;',
+      'if (L[i]) dp[i] = max(dp[i], dp[L[i]] + 1);',
+      'if (R[i]) dp[i] = max(dp[i], dp[R[i]] + 1);',
+      'ans = max(ans, dp[i]);'
+    ]
+  };
+  P.stats = [{ k: '平台数', v: '9' }, { k: '复杂度', v: 'O(n log n)' }];
+  P.actions = [{ id: 'fill', label: '按高度顺序填表', kind: 'primary' }];
+  say('点“填表”，看 dp 值一个个亮起来。', 'violet');
+  renderPanel();
+
+  async function fill() {
+    if (running || filled) return;
+    running = true;
+    V.badges = {}; V.edges = []; V.noHero = true; V.reach = new Set(); V.visited = new Set();
+    P.actions = [{ id: 'fill', label: '填表中…', kind: 'primary', disabled: true }];
+    renderPanel();
+    for (let q = 0; q < order.length; q++) {
+      if (token !== chapterToken) { running = false; return; }
+      const i = order[q];
+      V.focus = i;
+      V.badges[i] = { text: 'dp=' + dp[i], tone: 'violet' };
+      V.edges = [];
+      if (L[i] >= 0) V.edges.push({ a: i, b: L[i], kind: 'parentL' });
+      if (R[i] >= 0) V.edges.push({ a: i, b: R[i], kind: 'parentR' });
+      renderStage();
+      const parts = [];
+      if (L[i] >= 0) parts.push(`L → ${L[i] + 1} 号（dp ${dp[L[i]]}）`);
+      if (R[i] >= 0) parts.push(`R → ${R[i] + 1} 号（dp ${dp[R[i]]}）`);
+      say(`<b>${i + 1} 号</b>（高 ${h[i]}）：${parts.length ? parts.join('，') : '没有逆向边'} → dp = <em>${dp[i]}</em>`, 'violet');
+      P.code.hl = L[i] >= 0 ? 1 : R[i] >= 0 ? 2 : 0;
+      P.stats = [
+        { k: '已填', v: `${q + 1} / ${order.length}` },
+        { k: '当前 dp', v: String(dp[i]), cls: 'ok' },
+        { k: '当前最大', v: String(Math.max(...order.slice(0, q + 1).map(x => dp[x]))), wide: true },
+      ];
+      renderPanel();
+      await sleep(560);
+    }
+    if (token !== chapterToken) { running = false; return; }
+    running = false; filled = true;
+    V.focus = -1; V.target = start; V.cur = start; V.noHero = false; V.visited = new Set([start]);
+    renderStage();
+    say(`全部填完，最大值 <b>${ans}</b>。最优起点：<b>${start + 1} 号</b>（高 ${h[start]}）。`, 'good');
+    P.body = `<p>现在每个点最多两条出边，而且都指向更高的平台。顺着边走，高度严格上升——<b>不可能成环</b>。</p>
+      <p>按高度从高到低填表，算到谁时，两个父亲一定已经算好。头顶的徽章就是 <code>dp</code> 值。</p>
+      <p>最大值是 <b>${ans}</b>。dp 记的是“往上走”的长度，所以它对应一条<b>以该平台为终点</b>的上坡链；把链倒过来，就是一条从 ${start + 1} 号出发、长度为 ${ans} 的下坡路线。</p>`;
+    P.callout = { tone: 'good', label: 'O(n log n)', html: '单调栈 O(n) + 排序 O(n log n) + DP O(n)。n = 2×10⁵ 仍然轻松。若想严格 O(n)，把排序换成记忆化 DFS 或拓扑 DP；深链数据要用显式栈，避免递归爆栈。' };
+    P.stats = [
+      { k: '最优深度', v: ans + ' 层', cls: 'ok' },
+      { k: '最优起点', v: start + 1 + ' 号' },
+      { k: '复杂度', v: 'O(n log n)', wide: true },
+    ];
+    P.actions = [
+      { id: 'route', label: '还原下坡路线', kind: 'primary' },
+      { id: 'next', label: '去实战 →', kind: 'violet' },
+      { id: 'restart', label: '重看', kind: 'ghost' },
+    ];
+    award(15);
+    renderPanel();
+  }
+
+  async function route() {
+    if (lock || !filled) return;
+    lock = true;
+    V.edges = []; V.target = -1; V.visited = new Set([path[0]]); V.cur = path[0]; V.reach = new Set();
+    renderStage();
+    await sleep(350);
+    for (let q = 1; q < path.length; q++) {
+      if (token !== chapterToken) { lock = false; return; }
+      await heroJump(V.cur, path[q]);
+      if (token !== chapterToken) { lock = false; return; }
+      V.edges.push({ a: path[q - 1], b: path[q], kind: 'trace' });
+      V.cur = path[q]; V.visited.add(path[q]);
+      renderStage();
+      await sleep(140);
+    }
+    lock = false;
+    say(`路线：${path.map(i => i + 1).join(' → ')}，共 <em>${path.length}</em> 层。`, 'good');
+    P.actions = [{ id: 'next', label: '去实战，自己下一座塔 →', kind: 'primary' }, { id: 'restart', label: '重看', kind: 'ghost' }];
+    renderPanel();
+  }
+
+  api = { fill, route, next: () => go(6), restart: () => go(5) };
+}
+
+/* ============================================================
+   第 7 章 · 自由挑战
+   ============================================================ */
+function initCh7() {
+  const N = 16, D = 4;
+  const token = chapterToken;
+  let h, f, best, start0, path0;
+  let started = false, depth = 0, record = 0, done = false, demo = false, running = false, dead = false;
+
+  P.eyebrow = 'CHAPTER 07 · 实战';
+  P.title = '换一座塔，你能下多深？';
+  P.body = `<p>这次是随机生成的 <b>16</b> 个平台，高度互不相同，距离限制 <b>d = 4</b>。</p>
+    <p>先自己跳：点一个平台出发，然后每次点绿色落点。走到无路可走为止。</p>
+    <p>目标：达到算法算出的最优深度。卡住了可以看提示，或者让算法走一遍。</p>`;
+  P.callout = { tone: 'insight', label: '这一关考什么', html: '把前三章的结论用起来：能跳哪里、哪一步最优、什么时候该停。' };
+  P.code = {
+    title: '正解核心', lines: [
+      '<span class="cm">// 左、右各扫一次单调栈</span>',
+      'L[i], R[i] = 最近更高平台（距离 ≤ d）;',
+      '',
+      'dp[i] = 1 + max(dp[L[i]], dp[R[i]]);',
+      '答案 = max(dp[i]);'
+    ]
+  };
+  P.actions = [];
+  renderPanel();
+  newTower();
+
+  function newTower() {
+    let guard = 0;
+    do {
+      h = shuffle([...Array(N)].map((_, i) => i + 1));
+      f = solveForward(h, D);
+      best = Math.max(...f);
+    } while (best < 4 && ++guard < 80);
+    start0 = bestStart(h, D, f);
+    path0 = bestPath(h, D, f, start0);
+    started = false; depth = 0; done = false; demo = false; running = false; dead = false;
+    setScene(h, D, { tag: `SCENE 07 · 随机塔 · n = ${N} · d = ${D}` });
+    V.noHero = true;
+    P.stats = [
+      { k: '本局深度', v: '0 层' },
+      { k: '算法最优', v: best + ' 层', cls: 'ok' },
+      { k: '个人纪录', v: record + ' 层', wide: true },
+    ];
+    P.callout = { tone: 'insight', label: '提示', html: '先找一座“起点高、下一跳又够得着”的平台。跳之前想清楚：跳过去以后，还有没有更低的地方可去。' };
+    P.actions = [
+      { id: 'hint', label: '提示', disabled: true },
+      { id: 'demo', label: '算法演示' },
+      { id: 'newTower', label: '换一座塔' },
+      { id: 'restart', label: '重来', kind: 'ghost' },
+    ];
+    renderPanel();
+    say('点任意平台出发。绿色光点是可以落脚的地方。', 'good');
+  }
+
+  function updateStats() {
+    P.stats = [
+      { k: '本局深度', v: depth + ' 层', cls: depth === best ? 'ok' : '' },
+      { k: '算法最优', v: best + ' 层', cls: 'ok' },
+      { k: '个人纪录', v: record + ' 层', wide: true },
+    ];
+  }
+
+  function endRound() {
+    dead = true;
+    if (depth > record) record = depth;
+    updateStats();
+    if (depth === best && !done) {
+      done = true;
+      award(15);
+      toast('完美！和算法一样深。', 'good');
+      P.callout = { tone: 'good', label: '与算法持平', html: `你走到了 <b>${depth}</b> 层，正好是最优解。正解也是先求出每个点的最优值，再沿着它走。` };
+    } else {
+      P.callout = { tone: 'warn', label: '还差一点', html: `本局 <b>${depth}</b> 层，算法能到 <b>${best}</b> 层。试试点“提示”，或者看算法怎么走。` };
+    }
+    P.actions = [
+      { id: 'hint', label: '提示', disabled: true },
+      { id: 'demo', label: '算法演示' },
+      { id: 'newTower', label: '换一座塔' },
+      { id: 'restart', label: '重来', kind: 'ghost' },
+    ];
+    renderPanel();
+    say(`无路可走：本局 <b>${depth}</b> 层，算法最优 <b>${best}</b> 层。`, depth === best ? 'good' : 'warn');
+  }
+
+  function resetRound() {
+    started = false; depth = 0; done = false; demo = false; running = false; dead = false;
+    V.cur = -1; V.visited = new Set(); V.reach = new Set(); V.edges = [];
+    V.target = -1; V.blockers = new Set(); V.noHero = true;
+    renderStage();
+    updateStats();
+    P.callout = { tone: 'insight', label: '提示', html: '先找一座“起点高、下一跳又够得着”的平台。跳之前想清楚：跳过去以后，还有没有更低的地方可去。' };
+    P.actions = [
+      { id: 'hint', label: '提示', disabled: true },
+      { id: 'demo', label: '算法演示' },
+      { id: 'newTower', label: '换一座塔' },
+      { id: 'restart', label: '重来', kind: 'ghost' },
+    ];
+    renderPanel();
+    say('点任意平台出发。绿色光点是可以落脚的地方。', 'good');
+  }
+
+  api = {
+    platform: async i => {
+      if (lock || demo || done || dead) return;
+      if (!started) {
+        started = true; depth = 1; dead = false;
+        V.cur = i; V.noHero = false; V.visited = new Set([i]);
+        V.reach = new Set(validNexts(h, D, i));
+        renderStage();
+        updateStats();
+        P.actions = [
+          { id: 'hint', label: '提示' },
+          { id: 'demo', label: '算法演示' },
+          { id: 'newTower', label: '换一座塔' },
+          { id: 'restart', label: '重来', kind: 'ghost' },
+        ];
+        renderPanel();
+        if (V.reach.size === 0) { endRound(); return; }
+        say(`从 <b>${i + 1} 号</b>（高 ${h[i]}）出发，有 <em>${V.reach.size}</em> 个落点。`, 'good');
+        return;
+      }
+      if (V.reach.has(i)) {
+        lock = true;
+        await heroJump(V.cur, i);
+        if (token !== chapterToken) { lock = false; return; }
+        V.cur = i; V.visited.add(i); depth++;
+        V.reach = new Set(validNexts(h, D, i));
+        V.edges = [];
+        renderStage();
+        lock = false;
+        updateStats(); renderPanel();
+        if (V.reach.size === 0) { endRound(); return; }
+        say(`落地 <b>${i + 1} 号</b>（高 ${h[i]}），深度 <em>${depth}</em> 层，还能跳 ${V.reach.size} 个落点。`, 'good');
+        return;
+      }
+      const r = invalidReason(h, D, V.cur, i);
+      V.blockers = new Set(r.blocker >= 0 ? [r.blocker] : []);
+      V.edges = r.blocker >= 0 ? [{ a: V.cur, b: i, kind: 'block' }] : [];
+      V.target = i; V.reach = new Set();
+      renderStage();
+      toast(esc(r.text));
+      say(`这一步不合法：${esc(r.text)}。`, 'bad');
+      setTimeout(() => {
+        if (token !== chapterToken || !started || lock) return;
+        V.blockers = new Set(); V.edges = []; V.target = -1;
+        V.reach = new Set(validNexts(h, D, V.cur));
+        renderStage();
+      }, 1500);
+    },
+    hint: () => {
+      if (!started || done || demo) { toast('先站上一个平台', 'info'); return; }
+      let nx = -1, bv = -1;
+      for (const j of V.reach) if (f[j] > bv) { bv = f[j]; nx = j; }
+      if (nx < 0) return;
+      V.target = nx; renderStage();
+      say(`提示：下一跳去 <b>${nx + 1} 号</b>（高 ${h[nx]}），从那里出发还能走 <em>${f[nx]}</em> 层。`, 'good');
+    },
+    demo: async () => {
+      if (demo || running) return;
+      demo = true; running = true; lock = true;
+      V.cur = start0; V.noHero = false; V.visited = new Set([start0]);
+      V.reach = new Set(); V.target = -1; V.edges = []; V.blockers = new Set();
+      renderStage();
+      await sleep(420);
+      for (let q = 1; q < path0.length; q++) {
+        if (token !== chapterToken) { demo = false; running = false; lock = false; return; }
+        await heroJump(V.cur, path0[q]);
+        if (token !== chapterToken) { demo = false; running = false; lock = false; return; }
+        V.edges.push({ a: path0[q - 1], b: path0[q], kind: 'trace' });
+        V.cur = path0[q]; V.visited.add(path0[q]);
+        renderStage();
+        await sleep(140);
+      }
+      lock = false; running = false;
+      say(`算法路线：${path0.map(i => i + 1).join(' → ')}，共 <em>${path0.length}</em> 层。`, 'good');
+      P.callout = { tone: 'violet', label: '算法视角', html: `从 ${start0 + 1} 号出发，每一步都走向 dp 值最大的落点，最终 ${path0.length} 层。所有起点、所有落点，一次预处理就都算好了。` };
+      if (!done) { done = true; award(15); }
+      P.stats = [
+        { k: '算法深度', v: path0.length + ' 层', cls: 'ok' },
+        { k: '算法最优', v: best + ' 层', cls: 'ok' },
+        { k: '个人纪录', v: record + ' 层', wide: true },
+      ];
+      P.actions = [
+        { id: 'hint', label: '提示', disabled: true },
+        { id: 'demo', label: '算法演示' },
+        { id: 'newTower', label: '换一座塔', kind: 'primary' },
+        { id: 'restart', label: '重来', kind: 'ghost' },
+      ];
+      renderPanel();
+    },
+    newTower: () => { newTower(); },
+    restart: () => { resetRound(); },
+  };
+}
+
+/* ---------------- 启动 ---------------- */
+buildNav();
+go(0);
+
+function go(i) {
+  currentChapter = i;
+  chapterToken++;
+  lock = false;
+  $$('#problemModal,#finishModal').forEach(m => { m.classList.remove('on'); m.setAttribute('aria-hidden', 'true'); });
+  syncNav();
+  const inits = [initCh1, initCh2, initCh3, initCh4, initCh5, initCh6, initCh7];
+  inits[i]();
+  renderPanel();
+  toastEl.classList.remove('show');
+  clearTimeout(toastTimer);
+  panelScroll.scrollTop = 0;
+}
+
+$('#problemBtn').addEventListener('click', () => {
+  $('#problemModal').classList.add('on');
+  $('#problemModal').setAttribute('aria-hidden', 'false');
+});
+$$('[data-close]').forEach(el => el.addEventListener('click', () => {
+  el.closest('.modal').classList.remove('on');
+  el.closest('.modal').setAttribute('aria-hidden', 'true');
+}));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') $$('.modal.on').forEach(m => { m.classList.remove('on'); m.setAttribute('aria-hidden', 'true'); });
+});
+$('#finishAgain').addEventListener('click', () => {
+  completed.clear(); updateDepth(); syncNav();
+  $('#finishModal').classList.remove('on');
+  go(0);
+});
+window.addEventListener('resize', () => { if (V.n) renderStage(); });
+
+window.__T2__ = { go, V, validNexts, solveForward, solveReverse, computeParents, get api() { return api; } };
+})();
+</script>
+</body>
+</html>
