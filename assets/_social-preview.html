@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1280px; height:640px; overflow:hidden;
+    display:flex; align-items:center; gap:40px;
+    padding:56px 60px;
+    background:
+      radial-gradient(900px 520px at 88% -10%, rgba(45,110,200,.35), transparent 65%),
+      radial-gradient(700px 420px at -8% 110%, rgba(30,80,150,.30), transparent 60%),
+      #0d1117;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
+    color:#e6edf3;
+  }
+  .left { flex:1; min-width:0; }
+  .kicker {
+    display:inline-block; font-size:15px; letter-spacing:.12em; color:#7aa9e8;
+    border:1px solid rgba(122,169,232,.38); border-radius:999px;
+    padding:6px 14px; margin-bottom:22px;
+  }
+  h1 { font-size:52px; line-height:1.16; font-weight:800; letter-spacing:-.5px; }
+  h1 em { font-style:normal; color:#58a6ff; }
+  .sub { margin-top:16px; font-size:19px; line-height:1.6; color:#9aa7b4; }
+  .stats { margin-top:30px; display:flex; gap:34px; }
+  .stat b { display:block; font-size:30px; font-weight:800; color:#e6edf3; }
+  .stat span { font-size:14px; color:#7d8896; }
+  .foot { margin-top:26px; font-size:15px; color:#6f7b89; }
+  .right { flex:0 0 520px; }
+  .right img {
+    width:520px; height:auto; display:block; border-radius:12px;
+    box-shadow:0 18px 50px rgba(0,0,0,.55);
+  }
+</style>
+</head>
+<body>
+  <div class="left">
+    <span class="kicker">CSP-J / CSP-S · 2013—2025</span>
+    <h1>CSP-J/S<br><em>学习资料库</em></h1>
+    <p class="sub">历年真题 · 逐题题解 · 考点频次统计 · 备考清单<br>面向所有备考者长期维护，四组资料常年可用</p>
+    <div class="stats">
+      <div class="stat"><b>261</b><span>份文件</span></div>
+      <div class="stat"><b>13 年</b><span>初赛真题</span></div>
+      <div class="stat"><b>20 题</b><span>复赛分档题解</span></div>
+      <div class="stat"><b>MIT</b><span>原创内容许可</span></div>
+    </div>
+    <p class="foot">github.com/mingyush/csp</p>
+  </div>
+  <div class="right">
+    <img src="CSP-S1初赛考点频次.svg" alt="">
+  </div>
+</body>
+</html>

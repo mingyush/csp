@@ -2,6 +2,19 @@
 
 按时间倒序。版本号沿用 `v2.x`，功能性大批次升 minor。
 
+## v2.14.0 (2026-10-27)
+
+面向「让更多备考者找到并使用本仓库」的一版，内容未增，可发现性与可获取性提升。
+
+- ✨ 新增 `LICENSE`（MIT，覆盖原创文档／图表／脚本）与 `NOTICE.md`（版权三分层、第三方内容使用边界、权利人 48 小时移除承诺）—— 此前 GitHub 将本仓库识别为「无许可证」，按许可证筛选时会被排除，fork 者也有版权顾虑
+- ✨ 新增 `assets/CSP-S1初赛考点频次.svg` 与同名 `.png`：由《S1 考点分析与命题趋势》第三节频次表生成的五年考点热力图，可作为独立素材转发
+- ✨ 新增 `assets/social-preview.png`（1280×640）及生成源 `assets/_social-preview.html`，用于仓库 Settings → Social preview
+- 🔀 README 首屏重排：徽章改为可点击（目录／CHANGELOG／LICENSE／Stargazers）、嵌入考点频次图、新增「⚡ 先拿到手」（浅克隆／Release／在线看）与页内导航；文件数徽章 252 → 269
+- ✨ 新增 `tools/make_release.py`：把初赛真题、复赛题解、复赛真题分别打包为 zip，全量快照走 `git archive`；产物写入 `dist/`，已加入 `.gitignore`
+- ✨ 新增 `docs/GitHub仓库运营清单.md`：About 面板文案与 topics 清单、功能开关、Release 流程与说明模板、考季投放节奏、观察指标口径与风险项
+- 📝 贡献段改为「先提 Issue 再走 PR」，降低只报错的参与门槛；许可段改为指向 `LICENSE` 与 `NOTICE.md`
+- 📝 `docs/项目文档治理与隐私隔离.md` 目录职责补入 `LICENSE`／`NOTICE.md`／`assets/`／`tools/`，并新增两条约束（`assets/` 只放自制图、`tools/` 脚本须可重跑）
+
 ## v2.13.0 (2026-10-27)
 
 - 🔀 `CSP-S2复赛/题解/` 由单篇合订本拆为「总览 + 5 份年份分册」：`分册/00-总览与索引.md` 收纳说明、五年总览、验证状态、分类索引与分册入口；`分册/2025.md`…`分册/2021.md` 各含本场速览表、页内跳转与相邻分册导航。合订本保留，供通读与打印

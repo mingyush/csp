@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 736" width="760" height="736" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif">
+  <rect x="0" y="0" width="760" height="736" rx="14" fill="#ffffff" stroke="#e3e6ea" stroke-width="1"/>
+
+  <!-- 标题 -->
+  <text x="34" y="52" font-size="23" font-weight="700" fill="#11161c">CSP-S1 单项选择考点频次</text>
+  <text x="34" y="82" font-size="14" fill="#5b6470">2021—2025 五年真题 · 43 小题/年 · 数据可逐题回溯至本仓库试卷</text>
+  <line x1="34" y1="102" x2="726" y2="102" stroke="#eceff3" stroke-width="1"/>
+
+  <!-- 表头 -->
+  <text x="34" y="136" font-size="13" font-weight="600" fill="#7a828c">考点</text>
+  <text x="290" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="middle">2021</text>
+  <text x="354" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="middle">2022</text>
+  <text x="418" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="middle">2023</text>
+  <text x="482" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="middle">2024</text>
+  <text x="546" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="middle">2025</text>
+  <text x="726" y="136" font-size="13" font-weight="600" fill="#7a828c" text-anchor="end">出现频次</text>
+
+  <!-- 行 1 组合计数 5/5 -->
+  <text x="34" y="175" font-size="15" font-weight="600" fill="#11161c">组合计数</text>
+  <rect x="264" y="158" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="290" y="176" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="158" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="354" y="176" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="158" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="418" y="176" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="158" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="482" y="176" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="158" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="546" y="176" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="176" font-size="14" font-weight="700" fill="#1a5fc4" text-anchor="end">5 / 5</text>
+
+  <!-- 行 2 图论 5/5 -->
+  <text x="34" y="215" font-size="15" font-weight="600" fill="#11161c">图论</text>
+  <rect x="264" y="198" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="290" y="216" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="198" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="354" y="216" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="198" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="418" y="216" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="198" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="482" y="216" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="198" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="546" y="216" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="216" font-size="14" font-weight="700" fill="#1a5fc4" text-anchor="end">5 / 5</text>
+
+  <!-- 行 3 树与二叉树 5/5 -->
+  <text x="34" y="255" font-size="15" font-weight="600" fill="#11161c">树与二叉树</text>
+  <rect x="264" y="238" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="290" y="256" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="238" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="354" y="256" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="238" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="418" y="256" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="238" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="482" y="256" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="238" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="546" y="256" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="256" font-size="14" font-weight="700" fill="#1a5fc4" text-anchor="end">5 / 5</text>
+
+  <!-- 行 4 复杂度分析 5/5 -->
+  <text x="34" y="295" font-size="15" font-weight="600" fill="#11161c">复杂度分析</text>
+  <rect x="264" y="278" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="290" y="296" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="278" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="354" y="296" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="278" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="418" y="296" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="278" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="482" y="296" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="278" width="52" height="26" rx="5" fill="#1a5fc4"/><text x="546" y="296" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="296" font-size="14" font-weight="700" fill="#1a5fc4" text-anchor="end">5 / 5</text>
+
+  <!-- 行 5 哈希 4/5 -->
+  <text x="34" y="335" font-size="15" font-weight="600" fill="#11161c">哈希</text>
+  <rect x="264" y="318" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="290" y="336" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="318" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="354" y="336" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="318" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="456" y="318" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="482" y="336" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="318" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="546" y="336" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="336" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">4 / 5</text>
+
+  <!-- 行 6 计算机/系统常识 4/5 -->
+  <text x="34" y="375" font-size="15" font-weight="600" fill="#11161c">计算机 / 系统常识</text>
+  <rect x="264" y="358" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="290" y="376" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="358" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="354" y="376" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="358" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="418" y="376" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="358" width="52" height="26" rx="5" fill="#4b8bd6"/><text x="482" y="376" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="358" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <text x="726" y="376" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">4 / 5</text>
+
+  <!-- 行 7 排序 3/5 -->
+  <text x="34" y="415" font-size="15" font-weight="600" fill="#11161c">排序</text>
+  <rect x="264" y="398" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="290" y="416" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="398" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="354" y="416" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="398" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="418" y="416" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="398" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="520" y="398" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <text x="726" y="416" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">3 / 5</text>
+
+  <!-- 行 8 数论 3/5 -->
+  <text x="34" y="455" font-size="15" font-weight="600" fill="#11161c">数论</text>
+  <rect x="264" y="438" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="290" y="456" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="438" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="392" y="438" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="418" y="456" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="438" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="482" y="456" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="438" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <text x="726" y="456" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">3 / 5</text>
+
+  <!-- 行 9 数据结构基础 3/5 -->
+  <text x="34" y="495" font-size="15" font-weight="600" fill="#11161c">数据结构基础</text>
+  <rect x="264" y="478" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="328" y="478" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="354" y="496" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="392" y="478" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="418" y="496" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="478" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="482" y="496" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="478" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <text x="726" y="496" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">3 / 5</text>
+
+  <!-- 行 10 字符串 3/5 -->
+  <text x="34" y="535" font-size="15" font-weight="600" fill="#11161c">字符串</text>
+  <rect x="264" y="518" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="290" y="536" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="328" y="518" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="392" y="518" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="418" y="536" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="518" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="520" y="518" width="52" height="26" rx="5" fill="#7fb0dd"/><text x="546" y="536" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="536" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">3 / 5</text>
+
+  <!-- 行 11 DP 思想 2/5 -->
+  <text x="34" y="575" font-size="15" font-weight="600" fill="#11161c">DP 思想</text>
+  <rect x="264" y="558" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="328" y="558" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="392" y="558" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="456" y="558" width="52" height="26" rx="5" fill="#a9cbe9"/><text x="482" y="576" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="520" y="558" width="52" height="26" rx="5" fill="#a9cbe9"/><text x="546" y="576" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="576" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">2 / 5</text>
+
+  <!-- 行 12 高级数据结构 1/5 -->
+  <text x="34" y="615" font-size="15" font-weight="600" fill="#11161c">高级数据结构</text>
+  <rect x="264" y="598" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="328" y="598" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="392" y="598" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="456" y="598" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="520" y="598" width="52" height="26" rx="5" fill="#c9dcef"/><text x="546" y="616" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="726" y="616" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">1 / 5</text>
+
+  <!-- 行 13 概率期望 1/5 -->
+  <text x="34" y="655" font-size="15" font-weight="600" fill="#11161c">概率期望</text>
+  <rect x="264" y="638" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="328" y="638" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="392" y="638" width="52" height="26" rx="5" fill="#c9dcef"/><text x="418" y="656" font-size="13" fill="#ffffff" text-anchor="middle">✓</text>
+  <rect x="456" y="638" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <rect x="520" y="638" width="52" height="26" rx="5" fill="#f1f3f6"/>
+  <text x="726" y="656" font-size="14" font-weight="700" fill="#11161c" text-anchor="end">1 / 5</text>
+
+  <!-- 页脚 -->
+  <line x1="34" y1="682" x2="726" y2="682" stroke="#eceff3" stroke-width="1"/>
+  <text x="34" y="706" font-size="13" fill="#5b6470">组合、图论、树、复杂度四项五年全勤 —— 合计约占单选题 30 分的一半以上。</text>
+  <text x="34" y="726" font-size="12" fill="#98a1ac">github.com/mingyush/csp · 统计口径与逐年明细见《CSP-S1初赛历年真题考点分析与命题趋势》</text>
+</svg>

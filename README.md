@@ -2,11 +2,27 @@
 
 CSP-J（入门级）与 CSP-S（提高级）第一轮、第二轮的历年真题、逐题题解、考点分析与备考材料的集合。面向**所有备考者**长期维护：四组资料常年并行可用，不因某一轮考试结束而下线。
 
-![资料规模](https://img.shields.io/badge/资料-252%20文件%20%2F%20178MB-blue.svg)
+[![资料规模](https://img.shields.io/badge/资料-269%20文件%20%2F%20178MB-blue.svg)](#-目录结构)
+[![最近更新](https://img.shields.io/badge/最近更新-2026--10--27-green.svg)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/原创内容-MIT-lightgrey.svg)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/mingyush/csp?style=flat&label=Star&color=yellow)](https://github.com/mingyush/csp/stargazers)
 
-![更新](https://img.shields.io/badge/最近更新-2026--10--26-green.svg)
+![CSP-S1 单项选择考点频次（2021—2025）](assets/CSP-S1初赛考点频次.png)
 
-![License](https://img.shields.io/badge/原创内容-MIT-lightgrey.svg)
+> 上图由本仓库五年真题**逐题统计**生成，可右键另存直接转发（注明来源即可）。逐年明细与统计口径见 [S1 考点分析与命题趋势](CSP-S1初赛/备考/CSP-S1初赛历年真题考点分析与命题趋势.md)。
+
+## ⚡ 先拿到手
+
+| 方式 | 命令 / 入口 | 适合 |
+| --- | --- | --- |
+| 浅克隆（推荐） | `git clone --depth 1 https://github.com/mingyush/csp.git` | 只要内容、不要历史，约 1 分钟 |
+| 完整克隆 | `git clone https://github.com/mingyush/csp.git` | 想追溯每次改动 |
+| 打包下载 | [Releases](https://github.com/mingyush/csp/releases) | 不装 Git／手机上直接拿 zip |
+| 在线看 | 点开任意 `.md`，GitHub 自动渲染 | 快速查一篇题解 |
+
+仓库约 178MB，主要是 PDF 真题与讲义；`--depth 1` 跳过历史对象，明显快很多。
+
+**本页导航**：[30 秒上手](#-30-秒上手) · [目录结构](#-目录结构) · [按目的找材料](#-按目的找材料) · [文档索引](#-文档索引) · [环境与工具](#-环境与工具) · [贡献](#-贡献)
 
 ---
 
@@ -42,7 +58,9 @@ csp/
 ├── CSP-JS通用/      赛制纪律 · 初赛答题卡 · 防爆零清单 · STL 容器 · 考前清单 · 时间表 · 急救卡
 ├── NOI/             官方大纲（2023 / 2025 修订版）· NOI Linux 2.0 装机指南
 ├── 参考资料/        Hello 算法（第三方教程）
-└── docs/            项目治理与隐私边界
+├── assets/          README 图表（可自由转发）
+├── tools/           Release 打包脚本
+└── docs/            项目治理、隐私边界与仓库运营清单
 ```
 
 **统一分类规则**：历年认证试题及答案归入「真题」；机构卷、仿真卷归入「模拟」；知识讲解、训练计划、课程大纲归入「备考」。四组目录结构一致，学会一个就懂全部。
@@ -120,6 +138,9 @@ csp/
 
 欢迎补充真题、修正错误、改进文档。
 
+- **发现答案有误、资料缺失、链接失效** → [提 Issue](https://github.com/mingyush/csp/issues) 就行，不用写代码
+- **有整套材料要补** → 走下面的 PR 流程
+
 1. Fork → 建分支 → 提交改动 → 开 PR
 2. 新增资料按现有分类放进 `真题 / 模拟 / 备考`，并更新所在目录 README 索引
 3. 引用第三方内容请注明来源与版权；不确定能否公开的材料先开 Issue 讨论
@@ -130,8 +151,9 @@ csp/
 
 ## 📄 许可与致谢
 
-- 原创内容采用 MIT 许可；真题与官方文档版权归 CCF 及各原作者所有
-- 第三方讲义、机构资料版权归原作者，仅作学习参考
+- 原创内容（文档、图表、脚本）采用 [MIT 许可](LICENSE)，可自由取用与再分发，保留版权声明即可
+- 真题、官方大纲、第三方讲义版权归 CCF 及各原作者所有，**不在 MIT 范围内**，仅作学习参考；权利人可要求移除，48 小时内处理
+- 版权分层与使用边界的完整说明见 [NOTICE.md](NOTICE.md)
 - 感谢 CCF、洛谷、学而思及所有分享资料的同学与老师
 
 ---

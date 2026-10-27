@@ -10,6 +10,9 @@ target
 # 可再生生成产物（如 md 导出的预览 PDF），不入版本库
 *-preview.pdf
 
+# tools/make_release.py 的打包产物，只在本地用于上传 Release
+dist/
+
 # OJ 原始测试数据（约 374 MB，官方可重新下载，不入版本库）
 _oj-data/
 
